@@ -1,6 +1,8 @@
 #ifndef RULE_H
 #define RULE_H
 
+#define _GNU_SOURCE  // 启用GNU扩展
+
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
