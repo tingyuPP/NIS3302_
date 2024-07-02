@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "udp.h": "c",
+    "stdbool.h": "c",
+    "string.h": "c",
+    "tcp.h": "c",
+    "netfilter.h": "c",
+    "stdlib.h": "c",
+    "kernel.h": "c"
+  }
+}
