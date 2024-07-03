@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "rule.h"
 
 Rule getRuleById(int ruleID) {
     FILE *fp = fopen(RULE_FILE, "r");
