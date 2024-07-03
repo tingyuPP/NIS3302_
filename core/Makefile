@@ -6,6 +6,13 @@ ccflags-y := -std=gnu99 -Wno-declaration-after-statement
 
 BIN_DIR := bin
 
+#添加<stdbool.h>路径
+ccflags-y += -I /usr/lib/gcc/*/*/include
+ccflags-y += -I /usr/include
+
+
+
+
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) modules
