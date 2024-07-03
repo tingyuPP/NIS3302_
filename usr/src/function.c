@@ -1,6 +1,6 @@
-#include "/home/tyu/NIS3302_/usr/include/rule.h"
-#include "/home/tyu/NIS3302_/usr/include/function.h"
-#include "/home/tyu/NIS3302_/usr/include/utils.h"
+#include "rule.h"
+#include "function.h"
+#include "utils.h"
 
 // 添加规则
 bool addRule(const Rule *rule)
