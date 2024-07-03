@@ -119,45 +119,45 @@ void handleModify(int argc, char *argv[])
         return;
     }
 
-    if (strcmp(mdf_para, "ptc") == 0 && isValidProtocolType(mdf_value))
+    if (strcmp(mdf_para, "ptc") == 0 && isValidProtocolType(mdf_value)) //modify the protocol_type
     {
         strcpy(rule.protocol_type, mdf_value);
     }
-    else if (strcmp(mdf_para, "itf") == 0 && isValidInterfaceType(mdf_value))
+    else if (strcmp(mdf_para, "itf") == 0 && isValidInterfaceType(mdf_value)) //modify the interface_type
     {
         strcpy(rule.interface_type, mdf_value);
     }
-    else if (strcmp(mdf_para, "sip") == 0 && (isValidIP(mdf_value) || isValidIP(removeQuotes(mdf_value))))
+    else if (strcmp(mdf_para, "sip") == 0 && (isValidIP(mdf_value) || isValidIP(removeQuotes(mdf_value)))) //modify the source_ip
     {
         strcpy(rule.src_ip, mdf_value);
     }
-    else if (strcmp(mdf_para, "spt") == 0 && (isValidPort(mdf_value) || isValidPort(removeQuotes(mdf_value))))
+    else if (strcmp(mdf_para, "spt") == 0 && (isValidPort(mdf_value) || isValidPort(removeQuotes(mdf_value)))) //modify the source_port
     {
         strcpy(rule.src_port, mdf_value);
     }
-    else if (strcmp(mdf_para, "dip") == 0 && (isValidIP(mdf_value) || isValidIP(removeQuotes(mdf_value))))
+    else if (strcmp(mdf_para, "dip") == 0 && (isValidIP(mdf_value) || isValidIP(removeQuotes(mdf_value)))) //modify the destination_ip
     {
         strcpy(rule.dst_ip, mdf_value);
     }
-    else if (strcmp(mdf_para, "dpt") == 0 && (isValidPort(mdf_value) || isValidPort(removeQuotes(mdf_value))))
+    else if (strcmp(mdf_para, "dpt") == 0 && (isValidPort(mdf_value) || isValidPort(removeQuotes(mdf_value)))) //modify the deatination_port
     {
         strcpy(rule.dst_port, mdf_value);
     }
-    else if (strcmp(mdf_para, "btm") == 0 && isValidTime(removeQuotes(mdf_value)) && isBeginTimeBeforeEndTime(removeQuotes(mdf_value), rule.end_time))
+    else if (strcmp(mdf_para, "btm") == 0 && isValidTime(removeQuotes(mdf_value)) && isBeginTimeBeforeEndTime(removeQuotes(mdf_value), rule.end_time)) //modify the begin_time
     {
         strcpy(rule.begin_time, removeQuotes(mdf_value));
     }
-    else if (strcmp(mdf_para, "etm") == 0 && isValidTime(removeQuotes(mdf_value)) && isBeginTimeBeforeEndTime(rule.begin_time, removeQuotes(mdf_value)))
+    else if (strcmp(mdf_para, "etm") == 0 && isValidTime(removeQuotes(mdf_value)) && isBeginTimeBeforeEndTime(rule.begin_time, removeQuotes(mdf_value))) //modify the end_time
     {
         strcpy(rule.end_time, removeQuotes(mdf_value));
     }
-    else if (strcmp(mdf_para, "act") == 0 && (atoi(mdf_value) == 0 || atoi(mdf_value) == 1))
+    else if (strcmp(mdf_para, "act") == 0 && (atoi(mdf_value) == 0 || atoi(mdf_value) == 1)) //modify the action
     {
         rule.action = atoi(mdf_value);
     }
     else
     {
-        printf("无效的规则字段或值。\n");
+        printf("无效的规则字段或值\n");
         return;
     }
 
