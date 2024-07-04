@@ -13,7 +13,6 @@ void handleModify(int argc, char *argv[]);
 void handleList(int argc, char *argv[]);
 void handleSave(int argc, char *argv[]);
 void handleRead(int argc, char *argv[]);
-void handleWrite(int argc, char *argv[]);
 void handleHelp(int argc, char *argv[]);
 
 typedef void (*CommandHandler)(int, char *[]);
@@ -32,7 +31,6 @@ struct Command commands[] = {
     {"--list", "-l", handleList},
     {"--save", "-s", handleSave},
     {"--read", "-r", handleRead},
-    {"--write", "-w", handleWrite},
     {"--help", "-h", handleHelp},
     {NULL, NULL, NULL}};
 
@@ -68,6 +66,7 @@ void handleAdd(int argc, char *argv[])
     Rule rule = parseRule(argc - 2, argv + 2);
     if (addRule(&rule))
     {
+        writeRulesToDevice();
         printf("规则添加成功\n");
     }
     else
@@ -92,6 +91,7 @@ void handleDelete(int argc, char *argv[])
     }
     else if (deleteRule(ruleID))
     {
+        writeRulesToDevice();
         printf("规则删除成功\n");
     }
     else
@@ -163,6 +163,7 @@ void handleModify(int argc, char *argv[])
 
     if (modifyRule(ruleID, mdf_para, mdf_value))
     {
+        writeRulesToDevice();
         printf("规则修改成功\n");
     }
     else
@@ -178,18 +179,30 @@ void handleList(int argc, char *argv[])
 
 void handleSave(int argc, char *argv[])
 {
-    const char *filename = RULE_FILE;
+    if (argc < 3)
+    {
+        printf("缺少参数\n");
+        displayUsage();
+        return;
+    }
+    const char *filename = argv[2];
     saveRulesToFile(filename);
     printf("规则保存到文件成功\n");
 }
 
 void handleRead(int argc, char *argv[])
 {
-    const char *filename = RULE_FILE;
+    if (argc < 3)
+    {
+        printf("缺少参数\n");
+        displayUsage();
+        return;
+    }
+    const char *filename = argv[2];
     readRulesFromFile(filename);
     printf("从文件读取规则成功\n");
 }
-
+/*
 void handleWrite(int argc, char *argv[])
 {
     if (writeRulesToDevice())
@@ -201,7 +214,7 @@ void handleWrite(int argc, char *argv[])
         printf("规则写入设备失败\n");
     }
 }
-
+*/
 void handleHelp(int argc, char *argv[])
 {
     displayUsage();
