@@ -12,6 +12,7 @@
 #include <regex.h>
 #include <fcntl.h>
 #include <ctype.h>
+#include <netinet/in.h>
 
 #define MAX_RULES 30 //最大规则数量
 #define DEV_FILE "/dev/controlinfo" //设备文件名

@@ -13,6 +13,7 @@ void handleModify(int argc, char *argv[]);
 void handleList(int argc, char *argv[]);
 void handleSave(int argc, char *argv[]);
 void handleRead(int argc, char *argv[]);
+void handleWrite(int argc, char *argv[]);
 void handleHelp(int argc, char *argv[]);
 
 typedef void (*CommandHandler)(int, char *[]);
@@ -31,6 +32,7 @@ struct Command commands[] = {
     {"--list", "-l", handleList},
     {"--save", "-s", handleSave},
     {"--read", "-r", handleRead},
+    {"--write", "-w", handleWrite},
     {"--help", "-h", handleHelp},
     {NULL, NULL, NULL}};
 
@@ -59,19 +61,26 @@ void handleAdd(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        printf("缺少参数\n");
+        printf("\033[1;31m缺少参数！\033[0m\n");
         displayUsage();
         return;
     }
     Rule rule = parseRule(argc - 2, argv + 2);
     if (addRule(&rule))
     {
-        writeRulesToDevice();
-        printf("规则添加成功\n");
+        printf("\033[1;32m规则添加成功！\033[0m\n");
+        if (writeRulesToDevice())
+        {
+            printf("\033[1;32m规则写入设备成功！\033[0m\n");
+        }
+        else
+        {
+            printf("\033[1;31m规则写入设备失败！\033[0m\n");
+        }
     }
     else
     {
-        printf("规则添加失败\n");
+        printf("\033[1;31m规则添加失败！\033[0m\n");
     }
 }
 
@@ -79,7 +88,7 @@ void handleDelete(int argc, char *argv[])
 {
     if (argc < 3)
     {
-        printf("缺少参数\n");
+        printf("\033[1;31m缺少参数！\033[0m\n");
         displayUsage();
         return;
     }
@@ -87,16 +96,23 @@ void handleDelete(int argc, char *argv[])
     Rule rule = getRuleById(ruleID);
     if (!isRuleExist(&rule))
     {
-        printf("规则不存在\n");
+        printf("\033[1;31m规则不存在！\033[0m\n");
     }
     else if (deleteRule(ruleID))
     {
-        writeRulesToDevice();
-        printf("规则删除成功\n");
+        printf("\033[1;32m规则删除成功！\033[0m\n");
+        if (writeRulesToDevice())
+        {
+            printf("\033[1;32m规则写入设备成功！\033[0m\n");
+        }
+        else
+        {
+            printf("\033[1;31m规则写入设备失败！\033[0m\n");
+        }
     }
     else
     {
-        printf("规则删除失败\n");
+        printf("\033[1;31m规则删除失败！\033[0m\n");
     }
 }
 
@@ -104,7 +120,7 @@ void handleModify(int argc, char *argv[])
 {
     if (argc < 5)
     {
-        printf("缺少参数\n");
+        printf("\033[1;31m缺少参数！\033[0m\n");
         displayUsage();
         return;
     }
@@ -115,7 +131,7 @@ void handleModify(int argc, char *argv[])
     Rule rule = getRuleById(ruleID);
     if (!isRuleExist(&rule))
     {
-        printf("规则不存在\n");
+        printf("\033[1;31m规则不存在！\033[0m\n");
         return;
     }
 
@@ -157,18 +173,25 @@ void handleModify(int argc, char *argv[])
     }
     else
     {
-        printf("无效的规则字段或值\n");
+        printf("\033[1;31m无效的规则字段或值\033[0m\n");
         return;
     }
 
     if (modifyRule(ruleID, mdf_para, mdf_value))
     {
-        writeRulesToDevice();
-        printf("规则修改成功\n");
+        printf("\033[1;32m规则修改成功！\033[0m\n");
+        if (writeRulesToDevice())
+        {
+            printf("\033[1;32m规则写入设备成功！\033[0m\n");
+        }
+        else
+        {
+            printf("\033[1;31m规则写入设备失败！\033[0m\n");
+        }
     }
     else
     {
-        printf("规则修改失败\n");
+        printf("\033[1;31m规则修改失败！\033[0m\n");
     }
 }
 
@@ -187,34 +210,34 @@ void handleSave(int argc, char *argv[])
     }
     const char *filename = argv[2];
     saveRulesToFile(filename);
-    printf("规则保存到文件成功\n");
+    //printf("规则保存到文件成功\n");
 }
 
 void handleRead(int argc, char *argv[])
 {
     if (argc < 3)
     {
-        printf("缺少参数\n");
+        printf("\033[1;31m缺少参数！\033[0m\n");
         displayUsage();
         return;
     }
     const char *filename = argv[2];
     readRulesFromFile(filename);
-    printf("从文件读取规则成功\n");
+    //printf("从文件读取规则成功\n");
 }
-/*
+
 void handleWrite(int argc, char *argv[])
 {
     if (writeRulesToDevice())
     {
-        printf("规则写入设备成功\n");
+        printf("\033[1;32m规则写入设备成功！\033[0m\n");
     }
     else
     {
-        printf("规则写入设备失败\n");
+        printf("\033[1;31m规则写入设备失败！\033[0m\n");
     }
 }
-*/
+
 void handleHelp(int argc, char *argv[])
 {
     displayUsage();

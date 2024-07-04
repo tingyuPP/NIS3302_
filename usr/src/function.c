@@ -175,7 +175,6 @@ bool modifyRule(int ruleID, char *field, char *value)
     fclose(fp);
     fclose(tmp);
     if (!isModified) {
-        printf("\033[1;31m规则不存在！\033[0m\n");
         remove("/tmp/firewall.txt");
         return false;
     }
