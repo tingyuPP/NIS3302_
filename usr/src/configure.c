@@ -20,7 +20,7 @@ void displayUsage()
     printf("  -l, --list           List all rules\n");
     printf("  -s, --save           Save rules to file,input with another parameters--file_name\n");
     printf("  -r, --read           Read rules from file,input with another parameters--file_name\n");
-    printf("  -w, --write          Write rules to device\n");
+    //printf("  -w, --write          Write rules to device\n");
     printf("  -h, --help           Display this help message\n");
     printf("\n");
 }
