@@ -3,9 +3,11 @@
 #include "rule.h"
 #include "utils.h"
 
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+*/
 
 void handleAdd(int argc, char *argv[]);
 void handleDelete(int argc, char *argv[]);
