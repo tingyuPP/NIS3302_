@@ -14,7 +14,7 @@ bool addRule(const Rule *rule)
     FILE *fp = fopen(RULE_FILE, "a");
     if (fp == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开规则文件失败！\033[0m\n");
         return false;
     }
 
@@ -77,14 +77,14 @@ bool deleteRule(int ruleID)
     FILE *fp = fopen(RULE_FILE, "r");
     if (fp == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开规则文件失败！\033[0m\n");
         return false;
     }
 
     FILE *tmp = fopen("/tmp/firewall.txt", "w");
     if (tmp == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开临时文件失败！\033[0m\n");
         fclose(fp);
         return false;
     }
@@ -129,14 +129,14 @@ bool modifyRule(int ruleID, char *field, char *value)
     FILE *fp = fopen(RULE_FILE, "r");
     if (fp == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开规则文件失败！\033[0m\n");
         return false;
     }
 
     FILE *tmp = fopen("/tmp/firewall.txt", "w");
     if (tmp == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开临时文件失败！\033[0m\n");
         fclose(fp);
         return false;
     }
@@ -230,14 +230,14 @@ void saveRulesToFile(const char *filename)
     FILE *fp = fopen(filename, "w");
     if (fp == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开待存入文件失败！\033[0m\n");
         return;
     }
 
     FILE *ruleFile = fopen(RULE_FILE, "r");
     if (ruleFile == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开规则文件失败！\033[0m\n");
         fclose(fp);
         return;
     }
@@ -260,7 +260,7 @@ void readRulesFromFile(const char *filename)
     FILE *fp = fopen(filename, "r");
     if (fp == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开待读取文件失败！\033[0m\n");
         return;
     }
 
@@ -340,7 +340,7 @@ bool writeRulesToDevice()
     FILE *fp = fopen(RULE_FILE, "r");
     if (fp == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开规则文件失败！\033[0m\n");
         return false;
     }
 

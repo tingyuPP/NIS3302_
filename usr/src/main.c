@@ -206,7 +206,7 @@ void handleSave(int argc, char *argv[])
 {
     if (argc < 3)
     {
-        printf("缺少参数\n");
+        printf("\033[1;31m缺少参数！\033[0m\n");
         displayUsage();
         return;
     }

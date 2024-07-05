@@ -59,7 +59,7 @@ Rule parseRule(int argc, char *argv[])
     // 复制字符串到字符指针成员
     if (!isValidProtocolType(argv[0]))
     {
-        printf("输入的协议无效\n");
+        printf("\033[1;31m协议类型无效！\033[0m\n");
         exit(0);
     }
     else
@@ -78,7 +78,7 @@ Rule parseRule(int argc, char *argv[])
 
     if (!isValidIP(argv[2]) && !isValidIP(removeQuotes(argv[2])))
     {
-        printf("输入的源ip无效\n");
+        printf("\033[1;31m源IP地址无效！\033[0m\n");
         exit(0);
     }
     else
@@ -95,7 +95,7 @@ Rule parseRule(int argc, char *argv[])
 
     if (!isValidPort(argv[4]) && !isValidPort(removeQuotes(argv[3])))
     {
-        printf("输入的源端口无效\n");
+        printf("\033[1;31m源端口号无效，必须是数字且在0到65535之间！\033[0m\n");
         exit(0);
     }
     else
@@ -112,7 +112,7 @@ Rule parseRule(int argc, char *argv[])
 
     if (!isValidIP(argv[3]) && !isValidIP(removeQuotes(argv[4])))
     {
-        printf("输入的目标ip无效\n");
+        printf("\033[1;31m目标IP地址无效！\033[0m\n");
         exit(0);
     }
     else
@@ -131,7 +131,7 @@ Rule parseRule(int argc, char *argv[])
 
     if (!isValidPort(argv[5]) && !isValidPort(removeQuotes(argv[5])))
     {
-        printf("输入的目标端口无效\n");
+        printf("\033[1;31m目标端口号无效，必须是数字且在0到65535之间！\033[0m\n");
         exit(0);
     }
     else
@@ -148,17 +148,17 @@ Rule parseRule(int argc, char *argv[])
 
     if (!isValidTime(removeQuotes(argv[6])))
     {
-        printf("输入的开始时间无效\n");
+        //printf("输入的开始时间无效\n");
         exit(0);
     }
     else if (!isValidTime(removeQuotes(argv[7])))
     {
-        printf("输入的结束时间无效\n");
+        //printf("输入的结束时间无效\n");
         exit(0);
     }
     else if (!isBeginTimeBeforeEndTime(removeQuotes(argv[6]), removeQuotes(argv[7])))
     {
-        printf("时间无效，结束时间不晚于开始时间。\n");
+        //printf("时间无效，结束时间不晚于开始时间。\n");
         exit(0);
     }
     else
@@ -173,7 +173,7 @@ Rule parseRule(int argc, char *argv[])
     }
     else
     {
-        printf("输入的动作无效\n");
+        printf("\033[1;31m输入的动作无效！\033[0m\n");
         exit(0);
     }
 
