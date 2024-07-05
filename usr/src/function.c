@@ -265,11 +265,13 @@ void readRulesFromFile(const char *filename)
     }
 
     bool import = true;
+    bool isEmpty = true;
     char line[100];
     int IndexOfRules = 1;
 
     while (fgets(line, sizeof(line), fp) != NULL)
     {
+        isEmpty = false;
         Rule *rule = malloc(sizeof(Rule));
         rule->protocol_type = malloc(sizeof(char) * 10);
         rule->interface_type = malloc(sizeof(char) * 10);
@@ -320,16 +322,24 @@ void readRulesFromFile(const char *filename)
 
         IndexOfRules++;
     }
-        if (import)
+
+    if (import)
+    {
+        if(isEmpty)
         {
-            printf("\033[1;32m导入规则成功！\033[0m\n");
+            printf("\033[1;31m待导入文件为空！\033[0m\n");
         }
         else
         {
-            printf("\033[1;31m导入规则失败！\033[0m\n");
+            printf("\033[1;32m导入规则成功！\033[0m\n");
         }
+    }
+    else
+    {
+        printf("\033[1;31m导入规则失败！\033[0m\n");
+    }
 
-        fclose(fp);
+    fclose(fp);
 }
 
 // 将规则写入设备文件
@@ -379,13 +389,13 @@ bool writeRulesToDevice()
             continue;
         }
 
-        interface_type = (strcmp(interface_type,"") == 0)? "$":interface_type;
-        src_ip = (strcmp(src_ip,"") == 0)? "$":src_ip;
-        src_port = (strcmp(src_port,"") == 0)? "$":src_port;
-        dst_ip = (strcmp(dst_ip,"") == 0)? "$":dst_ip;
-        dst_port = (strcmp(dst_port,"") == 0)? "$":dst_port;
-        begin_time = (strcmp(begin_time,"") == 0)? "$":begin_time;
-        end_time = (strcmp(end_time,"") == 0)? "$":end_time;
+        interface_type = (strcmp(interface_type, "") == 0) ? "$" : interface_type;
+        src_ip = (strcmp(src_ip, "") == 0) ? "$" : src_ip;
+        src_port = (strcmp(src_port, "") == 0) ? "$" : src_port;
+        dst_ip = (strcmp(dst_ip, "") == 0) ? "$" : dst_ip;
+        dst_port = (strcmp(dst_port, "") == 0) ? "$" : dst_port;
+        begin_time = (strcmp(begin_time, "") == 0) ? "$" : begin_time;
+        end_time = (strcmp(end_time, "") == 0) ? "$" : end_time;
 
         // 将规则字段以空格间隔写入缓冲字段中,这里规则之间以分号间隔。
         int writtenLength = sprintf(bf + bfLength, "%s %s %s %s %s %s %s %s\n;", protocol_type, interface_type, src_ip, src_port, dst_ip, dst_port, begin_time, end_time);
@@ -397,13 +407,14 @@ bool writeRulesToDevice()
             fclose(fp);
             return false;
         }
-        
+
         bfLength += writtenLength;
 
         // 每次写入规则后，将缓冲区的内容写入设备文件
         ssize_t writtenBytes = write(fd, bf, bfLength);
 
-        if (bfLength == 0) {
+        if (bfLength == 0)
+        {
             write(fd, bf, bfLength + 1);
         }
 
