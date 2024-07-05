@@ -319,7 +319,7 @@ void readRulesFromFile(const char *filename)
         free(rule);
 
         IndexOfRules++;
-
+    }
         if (import)
         {
             printf("\033[1;32m导入规则成功！\033[0m\n");
@@ -330,7 +330,6 @@ void readRulesFromFile(const char *filename)
         }
 
         fclose(fp);
-    }
 }
 
 // 将规则写入设备文件
