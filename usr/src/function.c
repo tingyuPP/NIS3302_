@@ -428,7 +428,7 @@ void displayRules()
     FILE *fp = fopen(RULE_FILE, "r");
     if (fp == NULL)
     {
-        printf("\033[1;31m打开文件失败！\033[0m\n");
+        printf("\033[1;31m打开文件失败或未找到规则文件！\033[0m\n");
         return;
     }
 
