@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
 void handleAdd(int argc, char *argv[])
 {
-    if (argc < 2)
+    if (argc < 11)
     {
         printf("\033[1;31m缺少参数！\033[0m\n");
         displayUsage();
