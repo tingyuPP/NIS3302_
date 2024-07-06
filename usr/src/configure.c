@@ -106,7 +106,7 @@ Rule parseRule(int argc, char *argv[])
         }
         else
         {
-            strcpy(rule.src_port, argv[4]);
+            strcpy(rule.src_port, argv[3]);
         }
     }
 
@@ -123,7 +123,7 @@ Rule parseRule(int argc, char *argv[])
         }
         else
         {
-            strcpy(rule.dst_ip, argv[3]);
+            strcpy(rule.dst_ip, argv[4]);
         }
     }
 
