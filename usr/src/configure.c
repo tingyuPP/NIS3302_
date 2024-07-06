@@ -50,8 +50,8 @@ Rule parseRule(int argc, char *argv[])
     rule.protocol_type = malloc(strlen(argv[0]) + 1);
     rule.interface_type = malloc(strlen(argv[1]) + 1);
     rule.src_ip = malloc(strlen(argv[2]) + 1);
-    rule.dst_ip = malloc(strlen(argv[3]) + 1);
-    rule.src_port = malloc(strlen(argv[4]) + 1);
+    rule.src_port = malloc(strlen(argv[3]) + 1);
+    rule.dst_ip = malloc(strlen(argv[4]) + 1);
     rule.dst_port = malloc(strlen(argv[5]) + 1);
     rule.begin_time = malloc(strlen(argv[6]) + 1);
     rule.end_time = malloc(strlen(argv[7]) + 1);

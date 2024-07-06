@@ -409,6 +409,8 @@ bool writeRulesToDevice()
         }
 
         bfLength += writtenLength;
+    
+    }
 
         // 每次写入规则后，将缓冲区的内容写入设备文件
         ssize_t writtenBytes = write(fd, bf, bfLength);
@@ -429,7 +431,7 @@ bool writeRulesToDevice()
         close(fd);
         fclose(fp);
         return true;
-    }
+    
 }
 
 // 显示当前规则
