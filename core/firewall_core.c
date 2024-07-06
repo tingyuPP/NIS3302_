@@ -8,8 +8,8 @@
 #include <linux/ip.h>
 #include <linux/icmp.h>
 #include <linux/udp.h>
-#include <stdbool.h>
-#include <stdlib.h>
+// #include <stdbool.h>
+// #include <stdlib.h>
 #include <linux/skbuff.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
@@ -47,14 +47,62 @@ struct Rule
 
 static struct Rule rules[MAX_RULES_NUM]; // 规则数组
 static int rules_num = 0;                // 规则数量
-static char *device[MAX_INPUT_STR_LEN];  // 设备缓冲区
+static char device[MAX_INPUT_STR_LEN];   // 设备缓冲区
 static struct semaphore sem;             // 信号量
 static wait_queue_head_t wq;             // 等待队列
 struct file *filep = NULL;               // 文件指针
 loff_t pos = 0;                          // 文件偏移量
 struct rw_semaphore file_lock;           // 文件锁
 char buf_log[100];                       // 日志缓冲区
+static struct nf_hook_ops *nfho = NULL;  // 网络过滤钩子
 
+/*
+ * name:xif
+ * coder:xifan@2010@yahoo.cn
+ * time:08.20.2012
+ * file_name:my_atoi.c
+ * function:int my_atoi(char* pstr)
+ */
+
+int atoi(char *pstr)
+{
+    int Ret_Integer = 0;
+    int Integer_sign = 1;
+
+    /*
+     * 跳过前面的空格字符
+     */
+    while (isspace(*pstr) == 0)
+    {
+        pstr++;
+    }
+
+    /*
+     * 判断正负号
+     * 如果是正号，指针指向下一个字符
+     * 如果是符号，把符号标记为Integer_sign置-1，然后再把指针指向下一个字符
+     */
+    if (*pstr == '-')
+    {
+        Integer_sign = -1;
+    }
+    if (*pstr == '-' || *pstr == '+')
+    {
+        pstr++;
+    }
+
+    /*
+     * 把数字字符串逐个转换成整数，并把最后转换好的整数赋给Ret_Integer
+     */
+    while (*pstr >= '0' && *pstr <= '9')
+    {
+        Ret_Integer = Ret_Integer * 10 + *pstr - '0';
+        pstr++;
+    }
+    Ret_Integer = Integer_sign * Ret_Integer;
+
+    return Ret_Integer;
+}
 // 检查源ip和目的ip是否在规则范围内
 bool check_ip(const struct sk_buff *skb, const struct Rule *rule)
 {
@@ -357,6 +405,18 @@ static unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_h
     return NF_ACCEPT;
 }
 
+// 字符设备注册
+struct file_operations fops = {
+    .owner = THIS_MODULE,
+    .read = read_control,
+    .write = write_control,
+};
+struct miscdevice misc = {
+    .minor = MISC_DYNAMIC_MINOR,
+    .name = "firewall",
+    .fops = &fops,
+};
+
 // 初始化模块,功能包括初始化设备文件，初始化文件锁，注册设备，注册网络过滤钩子，初始化设备缓冲区
 static int __init firewall_init(void)
 {
@@ -370,15 +430,23 @@ static int __init firewall_init(void)
     filep = file;
     // 初始化文件锁
     init_rwsem(&file_lock);
-    // 注册设备
-    struct file_operations fops = {
-        .owner = THIS_MODULE,
-        .read = read_control,
-        .write = write_control,
-    };
-    misc_register(&misc);
+
+    misc_register(&misc); // 注册设备
+
     // 注册网络过滤钩子
-    nf_register_net_hook(&init_net, &nfho);
+
+    nfho = (struct nf_hook_ops *)kcalloc(1, sizeof(struct nf_hook_ops), GFP_KERNEL);
+    if (nfho == NULL)
+    {
+        pr_err("Failed to allocate memory\n");
+        return -1;
+    }
+    nfho->hook = hook_func;              // 数据包处理函数
+    nfho->hooknum = NF_INET_PRE_ROUTING; // 钩子位置
+    nfho->pf = PF_INET;                  // 协议族
+    nfho->priority = NF_IP_PRI_FIRST;    // 优先级
+
+    nf_register_net_hook(&init_net, nfho);
     // 初始化设备缓冲区
     memset(device, 0, MAX_INPUT_STR_LEN);
     // 初始化信号量
@@ -393,7 +461,7 @@ static void __exit firewall_exit(void)
     // 注销设备
     misc_deregister(&misc);
     // 注销网络过滤钩子
-    nf_unregister_net_hook(&init_net, &nfho);
+    nf_unregister_net_hook(&init_net, nfho);
     // 释放内存
     int i;
     for (i = 0; i < rules_num; i++)
