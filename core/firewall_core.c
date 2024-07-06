@@ -420,6 +420,8 @@ struct miscdevice misc = {
 // 初始化模块,功能包括初始化设备文件，初始化文件锁，注册设备，注册网络过滤钩子，初始化设备缓冲区
 static int __init firewall_init(void)
 {
+
+    printk(KERN_INFO "Firewall module loaded\n");
     // 初始化设备文件
     struct file *file = filp_open(LOG_FILE, O_RDWR | O_CREAT, 0644);
     if (IS_ERR(file))

@@ -46,6 +46,7 @@ __used __section("__versions") = {
 	{ 0xc40e93d3, "nf_unregister_net_hook" },
 	{ 0x37a0cba, "kfree" },
 	{ 0x3ef70737, "filp_close" },
+	{ 0x122c3a7e, "_printk" },
 	{ 0x67543840, "filp_open" },
 	{ 0x7b4da6ff, "__init_rwsem" },
 	{ 0x6e1510b2, "misc_register" },
@@ -53,7 +54,6 @@ __used __section("__versions") = {
 	{ 0x4454730e, "kmalloc_trace" },
 	{ 0xb1b2127c, "nf_register_net_hook" },
 	{ 0xd9a5ea54, "__init_waitqueue_head" },
-	{ 0x122c3a7e, "_printk" },
 	{ 0x3c3ff9fd, "sprintf" },
 	{ 0x656e4a6e, "snprintf" },
 	{ 0x57bc19d2, "down_write" },
@@ -75,4 +75,4 @@ __used __section("__versions") = {
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "C739E438A51AB773470E117");
+MODULE_INFO(srcversion, "2721D14AF6FCF3C82F94556");
