@@ -26,10 +26,11 @@ bool addRule(const Rule *rule)
     char line[100];
     while (fgets(line, sizeof(line), fp) != NULL)
     {
+        
         if (isdigit(line[0]))
         {
             ruleNumber++;
-            printf("%d\n", ruleNumber);
+            
         }
     }
 
@@ -51,7 +52,6 @@ bool addRule(const Rule *rule)
         if (isdigit(line[0]))
         {
             id = strtok(line, ",");
-            printf("%s\n", id);
         }
     }
 
