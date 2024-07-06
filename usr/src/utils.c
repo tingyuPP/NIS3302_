@@ -125,7 +125,6 @@ bool isValidPort(const char* port) {
     return true;
 }
 
-
 bool isValidTime(const char* time) {
     if (strcmp(time, "") == 0) {
         return true;
@@ -133,7 +132,7 @@ bool isValidTime(const char* time) {
 
     struct tm tm = {0};
     char* str = strptime(time, "%Y-%m-%d %H:%M:%S", &tm);
-    if (!str || *str != '\0') {
+    if (str == NULL || *str != '\0') {
         printf("\033[1;31m日期时间格式无效！应为YYYY-MM-DD HH:MM:SS\033[0m\n");
         return false;
     }
@@ -167,6 +166,7 @@ bool isValidTime(const char* time) {
 
     return true;
 }
+
 bool isBeginTimeBeforeEndTime(const char* beginTime, const char* endTime) {
     if (strcmp(beginTime, "") == 0 || strcmp(endTime, "") == 0) {
         return true;  // 如果任一时间为空，假定无需比较
