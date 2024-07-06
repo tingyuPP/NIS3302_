@@ -29,6 +29,7 @@ bool addRule(const Rule *rule)
         if (isdigit(line[0]))
         {
             ruleNumber++;
+            printf("%d\n", ruleNumber);
         }
     }
 
@@ -40,6 +41,8 @@ bool addRule(const Rule *rule)
         return false;
     }
 
+    rewind(fp);
+
     char *id;
     id = malloc(sizeof(char) * 10);
     // 遍历文件，找到最大的id
@@ -48,6 +51,7 @@ bool addRule(const Rule *rule)
         if (isdigit(line[0]))
         {
             id = strtok(line, ",");
+            printf("%s\n", id);
         }
     }
 
