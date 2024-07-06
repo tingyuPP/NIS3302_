@@ -54,7 +54,10 @@ bool isRuleExist(const Rule *rule) {
             return false;
         }
         char *rest = line_copy;
-
+        
+        // 分割ID
+        token = strtok_r(rest, ",", &rest);
+        
         // 比较协议类型
         token = strtok_r(rest, ",", &rest);
         if (!token) {
