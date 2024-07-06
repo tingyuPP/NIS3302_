@@ -199,7 +199,7 @@ bool isValidProtocolType(const char* protocolType) {
 }
 
 bool isValidInterfaceType(const char *interfaceType) {
-    if (interfaceType == NULL) {
+    if (strcmp(interfaceType, "$") == 0{
         return false;  
     }
     const char *valid_interfaces[] = {"eth0", "eth1", "wlan0", NULL};
