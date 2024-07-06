@@ -130,27 +130,23 @@ bool isValidTime(const char* time) {
         return true;
     }
 
-    struct tm tm = {0};
-    char* str = strptime(time, "%Y-%m-%d %H:%M:%S", &tm);
-    if (str == NULL || *str != '\0') {
+    // 临时存储解析后的时间各部分
+    int year, month, day, hour, minute, second;
+    char extra;
+    
+    // 检查格式是否完全符合 YYYY-MM-DD HH:MM:SS
+    if (sscanf(time, "%4d-%2d-%2d %2d:%2d:%2d%c", &year, &month, &day, &hour, &minute, &second, &extra) != 6) {
         printf("\033[1;31m日期时间格式无效！应为YYYY-MM-DD HH:MM:SS\033[0m\n");
         return false;
     }
 
-    // 验证日期和时间的逻辑正确性
-    int year = tm.tm_year + 1900; // tm_year是从1900年起的年份
-    int month = tm.tm_mon + 1;    // tm_mon是从0开始的月份
-    int day = tm.tm_mday;
-    int hour = tm.tm_hour;
-    int minute = tm.tm_min;
-    int second = tm.tm_sec;
-
-    if (month < 1 || month > 12 || day < 1 || hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) {
+    // 检查年、月、日、时、分、秒是否在有效范围内
+    if (year < 0 || month < 1 || month > 12 || day < 1 || hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) {
         printf("\033[1;31m日期或时间值超出有效范围！\033[0m\n");
         return false;
     }
 
-    // 检查天数是否合法
+    // 检查月份的天数是否合法
     int maxDays = 31;
     if (month == 4 || month == 6 || month == 9 || month == 11) {
         maxDays = 30;
@@ -166,6 +162,7 @@ bool isValidTime(const char* time) {
 
     return true;
 }
+
 
 bool isBeginTimeBeforeEndTime(const char* beginTime, const char* endTime) {
     if (strcmp(beginTime, "") == 0 || strcmp(endTime, "") == 0) {
