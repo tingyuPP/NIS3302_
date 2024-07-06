@@ -5,13 +5,13 @@
 // 添加规则
 bool addRule(const Rule *rule)
 {
-    /*
+    
     if (isRuleExist(rule))
     {
         // printf("\033[1;31m规则已存在！\033[0m\n");
         return false;
     }
-    */
+
     FILE *fp = fopen(RULE_FILE, "a+");
     if (fp == NULL)
     {
@@ -411,7 +411,7 @@ bool writeRulesToDevice()
         {
             continue;
         }
-
+        /*
         interface_type = (strcmp(interface_type, "") == 0) ? "$" : interface_type;
         src_ip = (strcmp(src_ip, "") == 0) ? "$" : src_ip;
         src_port = (strcmp(src_port, "") == 0) ? "$" : src_port;
@@ -419,7 +419,8 @@ bool writeRulesToDevice()
         dst_port = (strcmp(dst_port, "") == 0) ? "$" : dst_port;
         begin_time = (strcmp(begin_time, "") == 0) ? "$" : begin_time;
         end_time = (strcmp(end_time, "") == 0) ? "$" : end_time;
-
+        */
+       
         // 将规则字段以空格间隔写入缓冲字段中,这里规则之间以分号间隔。
         int writtenLength = sprintf(bf + bfLength, "%s %s %s %s %s %s %s %s\n;", protocol_type, interface_type, src_ip, src_port, dst_ip, dst_port, begin_time, end_time);
 
