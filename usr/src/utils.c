@@ -188,7 +188,7 @@ bool isRuleEmpty(const Rule *rule) {
 }
 
 bool isValidProtocolType(const char* protocolType) {
-    const char* valid_protocols[] = {"tcp", "udp", "icmp", "all", NULL};
+    const char* valid_protocols[] = {"tcp", "udp", "icmp", "all", "$"};
     for (int i = 0; valid_protocols[i] != NULL; i++) {
         if (strcmp(protocolType, valid_protocols[i]) == 0) {
             return true;
@@ -199,10 +199,10 @@ bool isValidProtocolType(const char* protocolType) {
 }
 
 bool isValidInterfaceType(const char *interfaceType) {
-    if (strcmp(interfaceType, "$") == 0{
-        return false;  
+    if (strcmp(interfaceType, "$") == 0) {
+        return true;  
     }
-    const char *valid_interfaces[] = {"eth0", "eth1", "wlan0", NULL};
+    const char *valid_interfaces[] = {"eth0", "eth1", "wlan0", "$"};
     for (int i = 0; valid_interfaces[i]; i++) {
         if (strcmp(interfaceType, valid_interfaces[i]) == 0) {
             return true;
@@ -212,7 +212,7 @@ bool isValidInterfaceType(const char *interfaceType) {
 }
 
 bool isValidIP(const char* ip) {
-    if (strcmp(ip, "") == 0) {
+    if (strcmp(ip, "$") == 0) {
         return true;
     }
 
@@ -225,7 +225,7 @@ bool isValidIP(const char* ip) {
 }
 
 bool isValidPort(const char* port) {
-    if (strcmp(port, "") == 0) {
+    if (strcmp(port, "$") == 0) {
         return true;
     }
 
@@ -249,7 +249,7 @@ bool isValidPort(const char* port) {
 }
 
 bool isValidTime(const char* time) {
-    if (strcmp(time, "") == 0) {
+    if (strcmp(time, "$") == 0) {
         return true;
     }
 
@@ -288,7 +288,7 @@ bool isValidTime(const char* time) {
 
 
 bool isBeginTimeBeforeEndTime(const char* beginTime, const char* endTime) {
-    if (strcmp(beginTime, "") == 0 || strcmp(endTime, "") == 0) {
+    if (strcmp(beginTime, "$") == 0 || strcmp(endTime, "$") == 0) {
         return true;  // 如果任一时间为空，假定无需比较
     }
 
