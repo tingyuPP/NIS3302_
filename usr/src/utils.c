@@ -53,8 +53,7 @@ bool isRuleExist(const Rule *rule) {
 }
 
 bool isRuleEmpty(const Rule *rule) {
-    return rule->id == 0 &&
-           rule->protocol_type == NULL &&
+    return rule->protocol_type == NULL &&
            rule->interface_type == NULL &&
            rule->src_ip == NULL &&
            rule->dst_ip == NULL &&
