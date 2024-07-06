@@ -43,10 +43,130 @@ bool isRuleExist(const Rule *rule) {
 
     char line[256];
     while (fgets(line, sizeof(line), fp)) {
-        if (atoi(strtok(line, ",")) == rule->id) {
+        // 去掉换行符
+        line[strcspn(line, "\n")] = '\0';
+
+        char *token;
+        char *line_copy = strdup(line); // 复制一份 line，以免 strtok 修改原始数据
+        if (!line_copy) {
+            perror("Failed to allocate memory");
             fclose(fp);
-            return true;
+            return false;
         }
+        char *rest = line_copy;
+
+        // 比较协议类型
+        token = strtok_r(rest, ",", &rest);
+        if (!token) {
+            printf("Failed to parse protocol_type from line: %s\n", line);
+            free(line_copy);
+            continue;
+        }
+        if (rule->protocol_type == NULL || strcmp(rule->protocol_type, token) != 0) {
+            free(line_copy);
+            continue;
+        }
+
+        // 比较网络接口类型
+        token = strtok_r(rest, ",", &rest);
+        if (!token) {
+            printf("Failed to parse interface_type from line: %s\n", line);
+            free(line_copy);
+            continue;
+        }
+        if (rule->interface_type == NULL || strcmp(rule->interface_type, token) != 0) {
+            free(line_copy);
+            continue;
+        }
+
+        // 比较源IP地址
+        token = strtok_r(rest, ",", &rest);
+        if (!token) {
+            printf("Failed to parse src_ip from line: %s\n", line);
+            free(line_copy);
+            continue;
+        }
+        if (rule->src_ip == NULL || strcmp(rule->src_ip, token) != 0) {
+            free(line_copy);
+            continue;
+        }
+
+        // 比较源端口号
+        token = strtok_r(rest, ",", &rest);
+        if (!token) {
+            printf("Failed to parse src_port from line: %s\n", line);
+            free(line_copy);
+            continue;
+        }
+        if (rule->src_port == NULL || strcmp(rule->src_port, token) != 0) {
+            free(line_copy);
+            continue;
+        }
+
+        // 比较目的IP地址
+        token = strtok_r(rest, ",", &rest);
+        if (!token) {
+            printf("Failed to parse dst_ip from line: %s\n", line);
+            free(line_copy);
+            continue;
+        }
+        if (rule->dst_ip == NULL || strcmp(rule->dst_ip, token) != 0) {
+            free(line_copy);
+            continue;
+        }
+
+        // 比较目的端口号
+        token = strtok_r(rest, ",", &rest);
+        if (!token) {
+            printf("Failed to parse dst_port from line: %s\n", line);
+            free(line_copy);
+            continue;
+        }
+        if (rule->dst_port == NULL || strcmp(rule->dst_port, token) != 0) {
+            free(line_copy);
+            continue;
+        }
+
+        // 比较开始时间
+        token = strtok_r(rest, ",", &rest);
+        if (!token) {
+            printf("Failed to parse begin_time from line: %s\n", line);
+            free(line_copy);
+            continue;
+        }
+        if (rule->begin_time == NULL || strcmp(rule->begin_time, token) != 0) {
+            free(line_copy);
+            continue;
+        }
+
+        // 比较结束时间
+        token = strtok_r(rest, ",", &rest);
+        if (!token) {
+            printf("Failed to parse end_time from line: %s\n", line);
+            free(line_copy);
+            continue;
+        }
+        if (rule->end_time == NULL || strcmp(rule->end_time, token) != 0) {
+            free(line_copy);
+            continue;
+        }
+
+        // 比较执行动作
+        token = strtok_r(rest, ",", &rest);
+        if (!token) {
+            printf("Failed to parse action from line: %s\n", line);
+            free(line_copy);
+            continue;
+        }
+        bool action = atoi(token);
+        if (rule->action != action) {
+            free(line_copy);
+            continue;
+        }
+
+        free(line_copy);
+        fclose(fp);
+        return true;
     }
     fclose(fp);
     return false;
