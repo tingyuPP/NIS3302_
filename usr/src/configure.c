@@ -16,7 +16,7 @@ void displayUsage()
     printf("Usage: firewall [options]\n");
     printf("[Options]:\n");
 
-    printf("  -a, --add            Add a new rule,input with another 9 parameters--ptc,itf,sip,spt,dip,dpt,btm,etm,act(default:'\')\n");
+    printf("  -a, --add            Add a new rule,input with another 9 parameters--ptc,itf,sip,spt,dip,dpt,btm,etm,act(default:'$')\n");
     printf("  -d, --delete         Delete a rule by ID,input with another parameters--id\n");
     printf("  -m, --modify         Modify a rule by ID,input with another 3 parameters--id,mdf_para,mdf_value\n");
     printf("  -l, --list           List all rules\n");
@@ -69,14 +69,14 @@ Rule parseRule(int argc, char *argv[])
 
     if (argv[1][0] == '\0')
     {
-        strcpy(rule.interface_type, "");
+        strcpy(rule.interface_type, "$");
     }
     else
     {
         strcpy(rule.interface_type, argv[1]);
     }
 
-    if (!isValidIP(argv[2]) && !isValidIP(removeQuotes(argv[2])))
+    if (!isValidIP(argv[2]))
     {
         printf("\033[1;31m源IP地址无效！\033[0m\n");
         exit(0);
@@ -85,7 +85,7 @@ Rule parseRule(int argc, char *argv[])
     {
         if (argv[2][0] == '\0')
         {
-            strcpy(rule.src_ip, "");
+            strcpy(rule.src_ip, "$");
         }
         else
         {
@@ -93,7 +93,7 @@ Rule parseRule(int argc, char *argv[])
         }
     }
 
-    if (!isValidPort(argv[4]) && !isValidPort(removeQuotes(argv[3])))
+    if (!isValidPort(argv[3]))
     {
         printf("\033[1;31m源端口号无效，必须是数字且在0到65535之间！\033[0m\n");
         exit(0);
@@ -102,7 +102,7 @@ Rule parseRule(int argc, char *argv[])
     {
         if (argv[3][0] == '\0')
         {
-            strcpy(rule.src_port, "");
+            strcpy(rule.src_port, "$");
         }
         else
         {
@@ -110,16 +110,16 @@ Rule parseRule(int argc, char *argv[])
         }
     }
 
-    if (!isValidIP(argv[3]) && !isValidIP(removeQuotes(argv[4])))
+    if (!isValidIP(argv[4]))
     {
         printf("\033[1;31m目标IP地址无效！\033[0m\n");
         exit(0);
     }
     else
     {
-        if (argv[3][0] == '\0')
+        if (argv[4][0] == '\0')
         {
-            strcpy(rule.dst_ip, "");
+            strcpy(rule.dst_ip, "$");
         }
         else
         {
@@ -138,7 +138,7 @@ Rule parseRule(int argc, char *argv[])
     {
         if (argv[5][0] == '\0')
         {
-            strcpy(rule.dst_port, "");
+            strcpy(rule.dst_port, "$");
         }
         else
         {
