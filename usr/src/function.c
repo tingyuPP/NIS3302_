@@ -5,13 +5,14 @@
 // 添加规则
 bool addRule(const Rule *rule)
 {
+    /*
     if (isRuleExist(rule))
     {
         // printf("\033[1;31m规则已存在！\033[0m\n");
         return false;
     }
-
-    FILE *fp = fopen(RULE_FILE, "a");
+    */
+    FILE *fp = fopen(RULE_FILE, "a+");
     if (fp == NULL)
     {
         printf("\033[1;31m打开规则文件失败！\033[0m\n");
@@ -20,17 +21,18 @@ bool addRule(const Rule *rule)
 
     char *action = rule->action ? "1" : "0";
 
+    rewind(fp);
+
     // 获取规则数量
     int ruleNumber = 0;
     // 读取文件中规则数量，其中每行一个规则，规则的开头为数字字符
     char line[100];
     while (fgets(line, sizeof(line), fp) != NULL)
     {
-        
+
         if (isdigit(line[0]))
         {
             ruleNumber++;
-            
         }
     }
 
@@ -44,29 +46,30 @@ bool addRule(const Rule *rule)
 
     rewind(fp);
 
-    char *id;
-    id = malloc(sizeof(char) * 10);
+    char *id = NULL;
+    int maxID = 0;
     // 遍历文件，找到最大的id
     while (fgets(line, sizeof(line), fp) != NULL)
     {
         if (isdigit(line[0]))
         {
-            id = strtok(line, ",");
+            char *tempId = strtok(line, ",");
+            if (tempId != NULL)
+            {
+                int currentID = atoi(tempId);
+                if (currentID > maxID)
+                {
+                    maxID = currentID;
+                }
+            }
         }
     }
-
-    // 新id为最大id加1
-    char *newID;
-    newID = malloc(sizeof(char) * 10);
-    strcpy(newID, id);
-    int maxID = atoi(newID);
     maxID++;
+    char *newID = malloc(sizeof(char) * 10);
     sprintf(newID, "%d", maxID);
-
     // 写入规则
     fprintf(fp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", newID, rule->protocol_type, rule->interface_type, rule->src_ip, rule->src_port, rule->dst_ip, rule->dst_port, rule->begin_time, rule->end_time, action);
 
-    free(id);
     free(newID);
 
     // printf("\033[1;32m添加规则成功！\033[0m\n");
@@ -97,6 +100,7 @@ bool deleteRule(int ruleID)
     bool isDeleted = false;
     while (fgets(line, sizeof(line), fp) != NULL)
     {
+        char *tmpline = strdup(line);
         if (isdigit(line[0]))
         {
             int id = atoi(strtok(line, ","));
@@ -106,7 +110,7 @@ bool deleteRule(int ruleID)
                 continue;
             }
         }
-        fprintf(tmp, "%s", line);
+        fprintf(tmp, "%s", tmpline);
     }
 
     fclose(fp);
@@ -149,6 +153,8 @@ bool modifyRule(int ruleID, char *field, char *value)
     bool isModified = false;
     while (fgets(line, sizeof(line), fp) != NULL)
     {
+        char *tmpline = strdup(line);
+        char *tmpline1 = strdup(line);
         if (isdigit(line[0]))
         {
             int id = atoi(strtok(line, ","));
@@ -156,7 +162,7 @@ bool modifyRule(int ruleID, char *field, char *value)
             {
                 isModified = true;
                 // 解析单行规则
-                char *id = strtok(line, ",");
+                char *id = strtok(tmpline1, ",");
                 char *protocol_type = strtok(NULL, ",");
                 char *interface_type = strtok(NULL, ",");
                 char *src_ip = strtok(NULL, ",");
@@ -166,51 +172,54 @@ bool modifyRule(int ruleID, char *field, char *value)
                 char *begin_time = strtok(NULL, ",");
                 char *end_time = strtok(NULL, ",");
                 char *action = strtok(NULL, ",");
-                if (action[strlen(action) - 1] == '\n')
+                if (action != NULL && strlen(action) > 0)
                 {
-                    action[strlen(action) - 1] = '\0';
+                    if (action[strlen(action) - 1] == '\n')
+                    {
+                        action[strlen(action) - 1] = '\0';
+                    }
                 }
                 // 对规则做修改并写入新文件
-                if (strcmp(field, "protocol_type") == 0)
+                if (strcmp(field, "ptc") == 0)
                 {
                     fprintf(tmp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", id, value, interface_type, src_ip, src_port, dst_ip, dst_port, begin_time, end_time, action);
                 }
-                else if (strcmp(field, "interface_type") == 0)
+                else if (strcmp(field, "itf") == 0)
                 {
                     fprintf(tmp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", id, protocol_type, value, src_ip, src_port, dst_ip, dst_port, begin_time, end_time, action);
                 }
-                else if (strcmp(field, "src_ip") == 0)
+                else if (strcmp(field, "sip") == 0)
                 {
                     fprintf(tmp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", id, protocol_type, interface_type, value, src_port, dst_ip, dst_port, begin_time, end_time, action);
                 }
-                else if (strcmp(field, "src_port") == 0)
+                else if (strcmp(field, "spt") == 0)
                 {
                     fprintf(tmp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", id, protocol_type, interface_type, src_ip, value, dst_ip, dst_port, begin_time, end_time, action);
                 }
-                else if (strcmp(field, "dst_ip") == 0)
+                else if (strcmp(field, "dip") == 0)
                 {
                     fprintf(tmp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", id, protocol_type, interface_type, src_ip, src_port, value, dst_port, begin_time, end_time, action);
                 }
-                else if (strcmp(field, "dst_port") == 0)
+                else if (strcmp(field, "dpt") == 0)
                 {
                     fprintf(tmp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", id, protocol_type, interface_type, src_ip, src_port, dst_ip, value, begin_time, end_time, action);
                 }
-                else if (strcmp(field, "begin_time") == 0)
+                else if (strcmp(field, "btm") == 0)
                 {
                     fprintf(tmp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", id, protocol_type, interface_type, src_ip, src_port, dst_ip, dst_port, value, end_time, action);
                 }
-                else if (strcmp(field, "end_time") == 0)
+                else if (strcmp(field, "etm") == 0)
                 {
                     fprintf(tmp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", id, protocol_type, interface_type, src_ip, src_port, dst_ip, dst_port, begin_time, value, action);
                 }
-                else if (strcmp(field, "action") == 0)
+                else if (strcmp(field, "act") == 0)
                 {
                     fprintf(tmp, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", id, protocol_type, interface_type, src_ip, src_port, dst_ip, dst_port, begin_time, end_time, value);
                 }
             }
             else
             {
-                fprintf(tmp, "%s", line);
+                fprintf(tmp, "%s", tmpline);
             }
         }
     }
@@ -329,7 +338,7 @@ void readRulesFromFile(const char *filename)
 
     if (import)
     {
-        if(isEmpty)
+        if (isEmpty)
         {
             printf("\033[1;31m待导入文件为空！\033[0m\n");
         }
@@ -413,29 +422,27 @@ bool writeRulesToDevice()
         }
 
         bfLength += writtenLength;
-    
     }
 
-        // 每次写入规则后，将缓冲区的内容写入设备文件
-        ssize_t writtenBytes = write(fd, bf, bfLength);
+    // 每次写入规则后，将缓冲区的内容写入设备文件
+    ssize_t writtenBytes = write(fd, bf, bfLength);
 
-        if (bfLength == 0)
-        {
-            write(fd, bf, bfLength + 1);
-        }
+    if (bfLength == 0)
+    {
+        write(fd, bf, bfLength + 1);
+    }
 
-        if (writtenBytes < 0)
-        {
-            printf("\033[1;31m写入设备文件失败！\033[0m\n");
-            close(fd);
-            fclose(fp);
-            return false;
-        }
-
+    if (writtenBytes < 0)
+    {
+        printf("\033[1;31m写入设备文件失败！\033[0m\n");
         close(fd);
         fclose(fp);
-        return true;
-    
+        return false;
+    }
+
+    close(fd);
+    fclose(fp);
+    return true;
 }
 
 // 显示当前规则
