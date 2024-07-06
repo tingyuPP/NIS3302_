@@ -53,7 +53,7 @@ bool addRule(const Rule *rule)
 
     // 新id为最大id加1
     char *newID;
-    newID = malloc(sizeof(char) * (strlen(id) + 1));
+    newID = malloc(sizeof(char) * 10);
     strcpy(newID, id);
     int maxID = atoi(newID);
     maxID++;
