@@ -4,7 +4,7 @@
 Rule getRuleById(int ruleID) {
     FILE *fp = fopen(RULE_FILE, "r");
     if (!fp) {
-        perror("Failed to open rule file");
+        //perror("Failed to open rule file");
         return (Rule){0};  
     }
 
@@ -37,7 +37,7 @@ Rule getRuleById(int ruleID) {
 bool isRuleExist(const Rule *rule) {
     FILE *fp = fopen(RULE_FILE, "r");
     if (!fp) {
-        perror("Failed to open rule file");
+        //perror("Failed to open rule file");
         return false;
     }
 
@@ -53,8 +53,7 @@ bool isRuleExist(const Rule *rule) {
 }
 
 bool isRuleEmpty(const Rule *rule) {
-    return rule->id == 0 &&
-           rule->protocol_type == NULL &&
+    return rule->protocol_type == NULL &&
            rule->interface_type == NULL &&
            rule->src_ip == NULL &&
            rule->dst_ip == NULL &&
@@ -72,7 +71,7 @@ bool isValidProtocolType(const char* protocolType) {
             return true;
         }
     }
-    printf("\033[1;31m协议类型无效！\033[0m\n");
+    //printf("\033[1;31m协议类型无效！\033[0m\n");
     return false;
 }
 
@@ -97,7 +96,7 @@ bool isValidIP(const char* ip) {
     struct sockaddr_in sa;
     int result = inet_pton(AF_INET, ip, &(sa.sin_addr));
     if (result == 0) {
-        printf("\033[1;31mIP地址无效！\033[0m\n");
+        //printf("\033[1;31mIP地址无效！\033[0m\n");
     }
     return result != 0;
 }
@@ -113,19 +112,18 @@ bool isValidPort(const char* port) {
     // 检查是否解析到字符串末尾并且字符串末尾没有多余的非数字字符
     while (*endPtr) {
         if (!isspace((unsigned char)*endPtr)) {
-            printf("\033[1;31m端口号无效，必须是数字且在0到65535之间！\033[0m\n");
+            //printf("\033[1;31m端口号无效，必须是数字且在0到65535之间！\033[0m\n");
             return false;
         }
         endPtr++;
     }
 
     if (portNum < 0 || portNum > 65535) {
-        printf("\033[1;31m端口号无效，必须在0到65535之间！\033[0m\n");
+        //printf("\033[1;31m端口号无效，必须在0到65535之间！\033[0m\n");
         return false;
     }
     return true;
 }
-
 
 bool isValidTime(const char* time) {
     if (strcmp(time, "") == 0) {
@@ -134,7 +132,7 @@ bool isValidTime(const char* time) {
 
     struct tm tm = {0};
     char* str = strptime(time, "%Y-%m-%d %H:%M:%S", &tm);
-    if (!str || *str != '\0') {
+    if (str == NULL || *str != '\0') {
         printf("\033[1;31m日期时间格式无效！应为YYYY-MM-DD HH:MM:SS\033[0m\n");
         return false;
     }
@@ -168,6 +166,7 @@ bool isValidTime(const char* time) {
 
     return true;
 }
+
 bool isBeginTimeBeforeEndTime(const char* beginTime, const char* endTime) {
     if (strcmp(beginTime, "") == 0 || strcmp(endTime, "") == 0) {
         return true;  // 如果任一时间为空，假定无需比较
