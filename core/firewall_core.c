@@ -31,6 +31,7 @@
 #define MAX_RULES_NUM 30                 // 最大规则数
 #define MAX_INPUT_STR_LEN 3200           // 最大输入字符串长度
 #define LOG_FILE "/var/log/firewall.log" // 日志文件路径
+#define DEV_FILE "/dev/controlinfo"      // 设备文件名
 
 struct Rule
 {
@@ -55,14 +56,6 @@ loff_t pos = 0;                          // 文件偏移量
 struct rw_semaphore file_lock;           // 文件锁
 char buf_log[100];                       // 日志缓冲区
 static struct nf_hook_ops *nfho = NULL;  // 网络过滤钩子
-
-/*
- * name:xif
- * coder:xifan@2010@yahoo.cn
- * time:08.20.2012
- * file_name:my_atoi.c
- * function:int my_atoi(char* pstr)
- */
 
 int atoi(char *pstr)
 {
@@ -413,7 +406,7 @@ struct file_operations fops = {
 };
 struct miscdevice misc = {
     .minor = MISC_DYNAMIC_MINOR,
-    .name = "firewall",
+    .name = DEV_FILE,
     .fops = &fops,
 };
 
