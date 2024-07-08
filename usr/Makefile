@@ -12,8 +12,8 @@ OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
 TARGET = $(BINDIR)/firewall_cli
 
 $(TARGET): $(OBJECTS)
-	@$(CC) $(CFLAGS)  $^ $(LIBS) -o $@
 	@mkdir -p $(BINDIR)
+	@$(CC) $(CFLAGS)  $^ $(LIBS) -o $@
 	@mv $@ $(BINDIR)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
