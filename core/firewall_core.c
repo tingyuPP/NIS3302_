@@ -29,9 +29,9 @@
 #include <linux/semaphore.h>
 
 #define MAX_RULES_NUM 30                 // 最大规则数
-#define MAX_INPUT_STR_LEN 3200           // 最大输入字符串长度
+#define MAX_INPUT_STR_LEN 9999           // 最大输入字符串长度
 #define LOG_FILE "/var/log/firewall.log" // 日志文件路径
-#define DEV_FILE "/dev/controlinfo"      // 设备文件名
+#define DEV_FILE "controlinfo"      // 设备文件名
 
 struct Rule
 {
