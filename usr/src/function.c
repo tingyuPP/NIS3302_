@@ -378,7 +378,7 @@ bool writeRulesToDevice()
     }
 
     // 打开设备文件
-    int fd = open(DEV_FILE, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    int fd = open(DEV_FILE, O_RDWR, S_IRUSR | S_IWUSR);
 
     if (fd == -1)
     {
