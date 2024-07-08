@@ -109,12 +109,12 @@ bool check_ip(const struct sk_buff *skb, const struct Rule *rule)
     sprintf(src_ip_str, "%u.%u.%u.%u", src_ip & 0xff, (src_ip >> 8) & 0xff, (src_ip >> 16) & 0xff, (src_ip >> 24) & 0xff); // 将IP地址转换为字符串
     sprintf(dst_ip_str, "%u.%u.%u.%u", dst_ip & 0xff, (dst_ip >> 8) & 0xff, (dst_ip >> 16) & 0xff, (dst_ip >> 24) & 0xff);
     // 检查源ip
-    if (strcmp(rule->src_ip, "*") != 0 && strcmp(rule->src_ip, src_ip_str) != 0)
+    if (strcmp(rule->src_ip, "$") != 0 && strcmp(rule->src_ip, src_ip_str) != 0)
     {
         return false;
     }
     // 检查目的ip
-    if (strcmp(rule->dst_ip, "*") != 0 && strcmp(rule->dst_ip, dst_ip_str) != 0)
+    if (strcmp(rule->dst_ip, "$") != 0 && strcmp(rule->dst_ip, dst_ip_str) != 0)
     {
         return false;
     }
@@ -127,7 +127,7 @@ bool check_port(const struct sk_buff *skb, const struct Rule *rule)
     struct tcphdr *tcph = tcp_hdr(skb); // 获取tcp头部
     struct udphdr *udph = udp_hdr(skb); // 获取udp头部
     // 检查源端口
-    if (strcmp(rule->src_port, "*") != 0)
+    if (strcmp(rule->src_port, "$") != 0)
     {
         if (tcph != NULL && ntohs(tcph->source) != atoi(rule->src_port))
         {
@@ -139,7 +139,7 @@ bool check_port(const struct sk_buff *skb, const struct Rule *rule)
         }
     }
     // 检查目的端口
-    if (strcmp(rule->dst_port, "*") != 0)
+    if (strcmp(rule->dst_port, "$") != 0)
     {
         if (tcph != NULL && ntohs(tcph->dest) != atoi(rule->dst_port))
         {
@@ -158,7 +158,7 @@ bool check_interface(const struct sk_buff *skb, const struct Rule *rule)
 {
     struct net_device *in = skb->dev; // 获取网络接口
     // 检查网络接口
-    if (strcmp(rule->interface_type, "*") != 0 && strcmp(rule->interface_type, in->name) != 0)
+    if (strcmp(rule->interface_type, "$") != 0 && strcmp(rule->interface_type, in->name) != 0)
     {
         return false;
     }
@@ -169,7 +169,7 @@ bool check_interface(const struct sk_buff *skb, const struct Rule *rule)
 bool check_time(const char *cur_time, const char *begin_time, const char *end_time)
 {
     // 如果对begin_time无要求
-    if (strcmp(begin_time, "*") == 0)
+    if (strcmp(begin_time, "$") == 0)
     {
         if (strcmp(cur_time, end_time) <= 0)
         {
@@ -178,7 +178,7 @@ bool check_time(const char *cur_time, const char *begin_time, const char *end_ti
         return false;
     }
     // 如果对end_time无要求
-    if (strcmp(end_time, "*") == 0)
+    if (strcmp(end_time, "$") == 0)
     {
         if (strcmp(cur_time, begin_time) >= 0)
         {
@@ -199,17 +199,17 @@ bool check_rule(const struct sk_buff *skb, const struct Rule *rule)
 {
     // 检查协议类型
     int protocol = ip_hdr(skb)->protocol;
-    if (strcmp(rule->protocol_type, "*") != 0)
+    if (strcmp(rule->protocol_type, "$") != 0)
     {
-        if (strcmp(rule->protocol_type, "TCP") == 0 && protocol != IPPROTO_TCP)
+        if (strcmp(rule->protocol_type, "tcp") == 0 && protocol != IPPROTO_TCP)
         {
             return false;
         }
-        if (strcmp(rule->protocol_type, "UDP") == 0 && protocol != IPPROTO_UDP)
+        if (strcmp(rule->protocol_type, "udp") == 0 && protocol != IPPROTO_UDP)
         {
             return false;
         }
-        if (strcmp(rule->protocol_type, "ICMP") == 0 && protocol != IPPROTO_ICMP)
+        if (strcmp(rule->protocol_type, "icmp") == 0 && protocol != IPPROTO_ICMP)
         {
             return false;
         }
