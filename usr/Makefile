@@ -9,7 +9,7 @@ BINDIR = bin
 
 SOURCES = $(wildcard $(SRCDIR)/*.c)
 OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
-TARGET = $(BINDIR)/main
+TARGET = $(BINDIR)/firewall_cli
 
 $(TARGET): $(OBJECTS)
 	@$(CC) $(CFLAGS)  $^ $(LIBS) -o $@
