@@ -275,8 +275,8 @@ static void parse_rules(void)
 {
     char *cur = device;
     char *str_rule;
-    // 每个规则之间用\n分割，规则的每个字段之间用空格分割
-    const char *delim_rule = "\n";
+    // 每个规则之间用分号分割，规则的每个字段之间用空格分割
+    const char *delim_rule = ";";
     const char *delim_field = " ";
     while ((str_rule = strsep(&cur, delim_rule)) != NULL && rules_num < MAX_RULES_NUM)
     {
