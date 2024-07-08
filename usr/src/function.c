@@ -425,8 +425,8 @@ bool writeRulesToDevice()
         end_time = (strcmp(end_time, "") == 0) ? "$" : end_time;
         */
 
-        // 将规则字段以空格间隔写入缓冲字段中,这里规则之间以分号间隔。
-        int writtenLength = sprintf(bf + bfLength, "%s %s %s %s %s %s %s %s;", protocol_type, interface_type, src_ip, src_port, dst_ip, dst_port, begin_time, end_time);
+        // 将规则字段以逗号间隔写入缓冲字段中,这里规则之间以分号间隔。
+        int writtenLength = sprintf(bf + bfLength, "%s,%s,%s,%s,%s,%s,%s,%s;", protocol_type, interface_type, src_ip, src_port, dst_ip, dst_port, begin_time, end_time);
 
         if (writtenLength < 0 || writtenLength >= (int)(sizeof(bf) - bfLength))
         {
