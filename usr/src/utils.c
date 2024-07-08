@@ -188,7 +188,7 @@ bool isRuleEmpty(const Rule *rule) {
 }
 
 bool isValidProtocolType(const char* protocolType) {
-    const char* valid_protocols[] = {"tcp", "udp", "icmp", "all", "$"};
+    const char* valid_protocols[] = {"tcp", "udp", "icmp", "$"};
     for (int i = 0; valid_protocols[i] != NULL; i++) {
         if (strcmp(protocolType, valid_protocols[i]) == 0) {
             return true;
