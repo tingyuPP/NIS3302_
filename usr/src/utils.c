@@ -202,7 +202,7 @@ bool isValidInterfaceType(const char *interfaceType) {
     if (strcmp(interfaceType, "$") == 0) {
         return true;  
     }
-    const char *valid_interfaces[] = {"eth0", "eth1", "wlan0", "$"};
+    const char *valid_interfaces[] = {"eth0", "eth1", "wlan0","ens33", "$"};
     for (int i = 0; valid_interfaces[i]; i++) {
         if (strcmp(interfaceType, valid_interfaces[i]) == 0) {
             return true;
