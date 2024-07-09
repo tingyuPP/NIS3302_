@@ -31,7 +31,7 @@
 #define MAX_RULES_NUM 30                 // 最大规则数
 #define MAX_INPUT_STR_LEN 9999           // 最大输入字符串长度
 #define LOG_FILE "/var/log/firewall.log" // 日志文件路径
-#define DEV_FILE "controlinfo"      // 设备文件名
+#define DEV_FILE "controlinfo"           // 设备文件名
 
 struct Rule
 {
@@ -99,6 +99,11 @@ int atoi(char *pstr)
 // 检查源ip和目的ip是否在规则范围内
 bool check_ip(const struct sk_buff *skb, const struct Rule *rule)
 {
+    // // 打印数据包信息
+    // printk("source ip: %pI4\n", &ip_hdr(skb)->saddr);
+    // printk("dest ip: %pI4\n", &ip_hdr(skb)->daddr);
+    // test
+    // printk(KERN_INFO "enter check_ip func\n");
     struct iphdr *iph = ip_hdr(skb); // 获取ip头部
     // 转换为主机字节序, 并获取源ip和目的ip
     __be32 src_ip = ntohl(iph->saddr);
@@ -106,18 +111,27 @@ bool check_ip(const struct sk_buff *skb, const struct Rule *rule)
     // 转换为字符串
     char src_ip_str[16]; // 16位是因为最大的IP地址长度是15位
     char dst_ip_str[16];
-    sprintf(src_ip_str, "%u.%u.%u.%u", src_ip & 0xff, (src_ip >> 8) & 0xff, (src_ip >> 16) & 0xff, (src_ip >> 24) & 0xff); // 将IP地址转换为字符串
-    sprintf(dst_ip_str, "%u.%u.%u.%u", dst_ip & 0xff, (dst_ip >> 8) & 0xff, (dst_ip >> 16) & 0xff, (dst_ip >> 24) & 0xff);
+
+    sprintf(src_ip_str, "%u.%u.%u.%u", (src_ip >> 24) & 0xff, (src_ip >> 16) & 0xff, (src_ip >> 8) & 0xff, src_ip & 0xff);
+    sprintf(dst_ip_str, "%u.%u.%u.%u", (dst_ip >> 24) & 0xff, (dst_ip >> 16) & 0xff, (dst_ip >> 8) & 0xff, dst_ip & 0xff);
+    // test
+    printk(KERN_INFO "src_ip_str: %s\n", src_ip_str);
+    printk(KERN_INFO "dst_ip_str: %s\n", dst_ip_str);
+    printk(KERN_INFO "rule->src_ip: %s\n", rule->src_ip);
+    printk(KERN_INFO "rule->dst_ip: %s\n", rule->dst_ip);
+
     // 检查源ip
-    if (strcmp(rule->src_ip, "$") != 0 && strcmp(rule->src_ip, src_ip_str) != 0)
+    if (strcmp(rule->src_ip, "$") != 0 && strcmp(rule->src_ip, dst_ip_str) != 0)
     {
         return false;
     }
+    printk(KERN_INFO "check_src_ip pass\n");
     // 检查目的ip
-    if (strcmp(rule->dst_ip, "$") != 0 && strcmp(rule->dst_ip, dst_ip_str) != 0)
+    if (strcmp(rule->dst_ip, "$") != 0 && strcmp(rule->dst_ip, src_ip_str) != 0)
     {
         return false;
     }
+    printk(KERN_INFO "check_dst_ip pass\n");
     return true;
 }
 
@@ -168,6 +182,11 @@ bool check_interface(const struct sk_buff *skb, const struct Rule *rule)
 // 检查时间是否在规则时间范围内，字符串格式为"YYYY-MM-DD HH:MM:SS"
 bool check_time(const char *cur_time, const char *begin_time, const char *end_time)
 {
+    // 如果对时间无要求
+    if (strcmp(begin_time, "$") == 0 && strcmp(end_time, "$") == 0)
+    {
+        return true;
+    }
     // 如果对begin_time无要求
     if (strcmp(begin_time, "$") == 0)
     {
@@ -197,39 +216,48 @@ bool check_time(const char *cur_time, const char *begin_time, const char *end_ti
 // 检查规则是否匹配
 bool check_rule(const struct sk_buff *skb, const struct Rule *rule)
 {
-    // 检查协议类型
-    int protocol = ip_hdr(skb)->protocol;
-    if (strcmp(rule->protocol_type, "$") != 0)
-    {
-        if (strcmp(rule->protocol_type, "tcp") == 0 && protocol != IPPROTO_TCP)
-        {
-            return false;
-        }
-        if (strcmp(rule->protocol_type, "udp") == 0 && protocol != IPPROTO_UDP)
-        {
-            return false;
-        }
-        if (strcmp(rule->protocol_type, "icmp") == 0 && protocol != IPPROTO_ICMP)
-        {
-            return false;
-        }
-    }
+    // // 打印数据包信息
 
+    // 检查协议类型
+    // int protocol = ip_hdr(skb)->protocol;
+    // if (strcmp(rule->protocol_type, "$") != 0)
+    // {
+    //     if (strcmp(rule->protocol_type, "tcp") == 0 && protocol != IPPROTO_TCP)
+    //     {
+    //         return false;
+    //     }
+    //     if (strcmp(rule->protocol_type, "udp") == 0 && protocol != IPPROTO_UDP)
+    //     {
+    //         return false;
+    //     }
+    //     if (strcmp(rule->protocol_type, "icmp") == 0 && protocol != IPPROTO_ICMP)
+    //     {
+    //         return false;
+    //     }
+    // }
+    // printk(KERN_INFO "check_pro\n");
+
+    // // 打印数据包信息
+    printk("source ip: %pI4\n", &ip_hdr(skb)->saddr);
+    printk("dest ip: %pI4\n", &ip_hdr(skb)->daddr);
     // 检查ip
     if (!check_ip(skb, rule))
     {
         return false;
     }
+    printk(KERN_INFO "check_ip\n");
     // 检查端口
     if (!check_port(skb, rule))
     {
         return false;
     }
+    printk(KERN_INFO "check_port\n");
     // 检查网络接口
     if (!check_interface(skb, rule))
     {
         return false;
     }
+    printk(KERN_INFO "check_interface\n");
     // 检查时间
     struct timespec64 tv;
     struct tm tm;
@@ -244,6 +272,7 @@ bool check_rule(const struct sk_buff *skb, const struct Rule *rule)
     {
         return false;
     }
+    printk(KERN_INFO "check_time\n");
 
     return true;
 }
@@ -271,54 +300,49 @@ static int print_log(const char *log)
 }
 
 // 将读取到的字符串解析并保存在结构体数组中，即分割字符串，将每个规则保存在一个结构体中
+// 每个规则之间用分号分割，规则的每个字段之间用逗号分割
+// 不需要错误处理，错误均在用户态处理
 static void parse_rules(void)
 {
-    char *cur = device;
-    char *str_rule;
-    // 每个规则之间用分号分割，规则的每个字段之间用空格分割
-    const char *delim_rule = ";";
-    const char *delim_field = " ";
-    while ((str_rule = strsep(&cur, delim_rule)) != NULL && rules_num < MAX_RULES_NUM)
+    char *p = device;
+    char *q = device;
+    while (*p != '\0')
     {
-        struct Rule rule;
-        char *field;
-        int field_num = 0;
-        memset(&rule, 0, sizeof(struct Rule));
-        while ((field = strsep(&str_rule, delim_field)) != NULL)
+        if (*p == ';')
         {
-            // 根据字段编号保存到结构体中，注意加上错误提示
-            switch (field_num)
-            {
-            case 0:
-                rule.protocol_type = field;
-                break;
-            case 1:
-                rule.interface_type = field;
-                break;
-            case 2:
-                rule.src_ip = field;
-                break;
-            case 3:
-                rule.src_port = field;
-                break;
-            case 4:
-                rule.dst_ip = field;
-                break;
-            case 5:
-                rule.dst_port = field;
-                break;
-            case 6:
-                rule.begin_time = field;
-                break;
-            case 7:
-                rule.end_time = field;
-                break;
-            default:
-                break;
-            }
-            field_num++;
+            *p = '\0';
+            char *rule = q;
+            q = p + 1;
+            char *protocol_type = strsep(&rule, ",");
+            char *interface_type = strsep(&rule, ",");
+            char *src_ip = strsep(&rule, ",");
+            char *src_port = strsep(&rule, ",");
+            char *dst_ip = strsep(&rule, ",");
+            char *dst_port = strsep(&rule, ",");
+            char *begin_time = strsep(&rule, ",");
+            char *end_time = strsep(&rule, ",");
+            // 保存规则
+            rules[rules_num].id = rules_num;
+            rules[rules_num].protocol_type = kstrdup(protocol_type, GFP_KERNEL);
+            rules[rules_num].interface_type = kstrdup(interface_type, GFP_KERNEL);
+            rules[rules_num].src_ip = kstrdup(src_ip, GFP_KERNEL);
+            rules[rules_num].src_port = kstrdup(src_port, GFP_KERNEL);
+            rules[rules_num].dst_ip = kstrdup(dst_ip, GFP_KERNEL);
+            rules[rules_num].dst_port = kstrdup(dst_port, GFP_KERNEL);
+            rules[rules_num].begin_time = kstrdup(begin_time, GFP_KERNEL);
+            rules[rules_num].end_time = kstrdup(end_time, GFP_KERNEL);
+            rules_num++;
+            // test
+            printk(KERN_INFO "protocol_type: %s\n", rules[rules_num - 1].protocol_type);
+            printk(KERN_INFO "interface_type: %s\n", rules[rules_num - 1].interface_type);
+            printk(KERN_INFO "src_ip: %s\n", rules[rules_num - 1].src_ip);
+            printk(KERN_INFO "src_port: %s\n", rules[rules_num - 1].src_port);
+            printk(KERN_INFO "dst_ip: %s\n", rules[rules_num - 1].dst_ip);
+            printk(KERN_INFO "dst_port: %s\n", rules[rules_num - 1].dst_port);
+            printk(KERN_INFO "begin_time: %s\n", rules[rules_num - 1].begin_time);
+            printk(KERN_INFO "end_time: %s\n", rules[rules_num - 1].end_time);
         }
-        rules[rules_num++] = rule;
+        p++;
     }
 }
 
@@ -326,7 +350,7 @@ static void parse_rules(void)
 // 参数分别表示文件指针，用户缓冲区，读取的字节数，偏移量
 static ssize_t read_control(struct file *file, char __user *buf, size_t count, loff_t *ppos)
 {
-    int temp = simple_read_from_buffer(buf, count, ppos, device, strlen(device)); // 从device中读取数据到buf中,返回值为读取的字节数
+    int temp = simple_read_from_buffer(buf, count, ppos, device, MAX_INPUT_STR_LEN); // 从device中读取数据到buf中,返回值为读取的字节数
     return temp;
 }
 
@@ -358,6 +382,11 @@ static ssize_t write_control(struct file *file, const char __user *buf, size_t c
 // 注意信号量的使用
 static unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_state *state)
 {
+    // 打印数据包信息
+    // printk("source ip: %pI4\n", &ip_hdr(skb)->saddr);
+    // printk("dest ip: %pI4\n", &ip_hdr(skb)->daddr);
+
+    //  printk(KERN_INFO "hook_func\n");
     if (down_interruptible(&sem))
     {
         wait_event_interruptible(wq, 1);
@@ -365,17 +394,21 @@ static unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_h
     int i;
     for (i = 0; i < rules_num; i++)
     {
+        // printk(KERN_INFO "check rule %d\n", i);
         if (check_rule(skb, &rules[i]))
+
         {
-            // 打印日志
+            // 输出进入的规则号
+            printk(KERN_INFO "Matched rule %d\n", i);
+            //  打印日志
             char log[100];
-            struct iphdr *iph = ip_hdr(skb);
-            struct tcphdr *tcph = tcp_hdr(skb);
-            struct udphdr *udph = udp_hdr(skb);
-            struct icmphdr *icmph = icmp_hdr(skb);
+            struct iphdr *iph = ip_hdr(skb);       // 获取ip头部
+            struct tcphdr *tcph = tcp_hdr(skb);    // 获取tcp头部
+            struct udphdr *udph = udp_hdr(skb);    // 获取udp头部
+            struct icmphdr *icmph = icmp_hdr(skb); // 获取icmp头部
             char src_ip[16];
             char dst_ip[16];
-            sprintf(src_ip, "%pI4", &iph->saddr);
+            sprintf(src_ip, "%pI4", &iph->saddr); // 转换为字符串
             sprintf(dst_ip, "%pI4", &iph->daddr);
             if (tcph != NULL)
             {
