@@ -15,7 +15,7 @@ BIN_DIR := bin
 
 PWD  := $(shell pwd)
 #添加<stdbool.h>路径
-ccflags-y += -I /usr/lib/gcc/*/*/include
+#ccflags-y += -I /usr/lib/gcc/*/*/include
 ccflags-y += -I /usr/include
 
 all:
