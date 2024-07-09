@@ -36,7 +36,7 @@ MODULE_INFO(retpoline, "Y");
 static const struct modversion_info ____versions[]
 __used __section("__versions") = {
 	{ 0x85df9b6c, "strsep" },
-	{ 0x122c3a7e, "_printk" },
+	{ 0x2d39b0a7, "kstrdup" },
 	{ 0xcf2a6966, "up" },
 	{ 0xe2c17b5d, "__SCT__might_resched" },
 	{ 0xf0fdf6cb, "__stack_chk_fail" },
@@ -47,6 +47,7 @@ __used __section("__versions") = {
 	{ 0xc40e93d3, "nf_unregister_net_hook" },
 	{ 0x37a0cba, "kfree" },
 	{ 0x3ef70737, "filp_close" },
+	{ 0x122c3a7e, "_printk" },
 	{ 0x67543840, "filp_open" },
 	{ 0x7b4da6ff, "__init_rwsem" },
 	{ 0x6e1510b2, "misc_register" },
@@ -57,6 +58,7 @@ __used __section("__versions") = {
 	{ 0x11089ac7, "_ctype" },
 	{ 0x3c3ff9fd, "sprintf" },
 	{ 0xe2d5255a, "strcmp" },
+	{ 0xbcab6ee6, "sscanf" },
 	{ 0x9ec6ca96, "ktime_get_real_ts64" },
 	{ 0xfff5afc, "time64_to_tm" },
 	{ 0x656e4a6e, "snprintf" },
@@ -74,4 +76,4 @@ __used __section("__versions") = {
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "FC8BD50BE11D2D12ACFD11D");
+MODULE_INFO(srcversion, "EF659CF6C83A8A775300EE7");

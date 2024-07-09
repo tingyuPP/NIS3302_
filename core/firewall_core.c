@@ -99,22 +99,34 @@ int atoi(char *pstr)
 // 检查源ip和目的ip是否在规则范围内
 bool check_ip(const struct sk_buff *skb, const struct Rule *rule)
 {
+    // 打印rule的全部信息
+    // printk(KERN_INFO "rule_id=%d\n", rule->id);
+    // printk(KERN_INFO "rule_protocol_type=%s\n", rule->protocol_type);
+    // printk(KERN_INFO "rule_interface_type=%s\n", rule->interface_type);
+    // printk(KERN_INFO "rule_src_ip=%s\n", rule->src_ip);
+    // printk(KERN_INFO "rule_src_port=%s\n", rule->src_port);
+    // printk(KERN_INFO "rule_dst_ip=%s\n", rule->dst_ip);
+    // printk(KERN_INFO "rule_dst_port=%s\n", rule->dst_port);
+    // printk(KERN_INFO "rule_begin_time=%s\n", rule->begin_time);
+    // printk(KERN_INFO "rule_end_time=%s\n", rule->end_time);
+
+    // printk(KERN_INFO "start check_ip\n");
     struct iphdr *iph = ip_hdr(skb); // 获取ip头部
-    // 转换为主机字节序, 并获取源ip和目的ip
-    __be32 src_ip = ntohl(iph->saddr);
-    __be32 dst_ip = ntohl(iph->daddr);
-    // 转换为字符串
-    char src_ip_str[16]; // 16位是因为最大的IP地址长度是15位
+    char src_ip_str[16];
     char dst_ip_str[16];
-    sprintf(src_ip_str, "%u.%u.%u.%u", src_ip & 0xff, (src_ip >> 8) & 0xff, (src_ip >> 16) & 0xff, (src_ip >> 24) & 0xff); // 将IP地址转换为字符串
-    sprintf(dst_ip_str, "%u.%u.%u.%u", dst_ip & 0xff, (dst_ip >> 8) & 0xff, (dst_ip >> 16) & 0xff, (dst_ip >> 24) & 0xff);
-    // 检查源ip
-    if (strcmp(rule->src_ip, "$") != 0 && strcmp(rule->src_ip, src_ip_str) != 0)
+    sprintf(src_ip_str, "%pI4", &iph->saddr);
+    sprintf(dst_ip_str, "%pI4", &iph->daddr);
+
+    // printk(KERN_INFO "src_ip=%s, dst_ip=%s\n", src_ip_str, dst_ip_str);
+    // printk(KERN_INFO "rule_src_ip=%s, rule_dst_ip=%s\n", rule->src_ip, rule->dst_ip);
+
+    //  检查源ip
+    if (strcmp(rule->src_ip, "$") != 0 && strcmp(rule->src_ip, dst_ip_str) != 0)
     {
         return false;
     }
     // 检查目的ip
-    if (strcmp(rule->dst_ip, "$") != 0 && strcmp(rule->dst_ip, dst_ip_str) != 0)
+    if (strcmp(rule->dst_ip, "$") != 0 && strcmp(rule->dst_ip, src_ip_str) != 0)
     {
         return false;
     }
@@ -126,6 +138,9 @@ bool check_port(const struct sk_buff *skb, const struct Rule *rule)
 {
     struct tcphdr *tcph = tcp_hdr(skb); // 获取tcp头部
     struct udphdr *udph = udp_hdr(skb); // 获取udp头部
+    // 输出端口号和规则端口号
+    // printk(KERN_INFO "src_port=%d, dst_port=%d\n", ntohs(tcph->source), ntohs(tcph->dest));
+    // printk(KERN_INFO "rule_src_port=%s, rule_dst_port=%s\n", rule->src_port, rule->dst_port);
     // 检查源端口
     if (strcmp(rule->src_port, "$") != 0)
     {
@@ -157,12 +172,91 @@ bool check_port(const struct sk_buff *skb, const struct Rule *rule)
 bool check_interface(const struct sk_buff *skb, const struct Rule *rule)
 {
     struct net_device *in = skb->dev; // 获取网络接口
+    // 输出网络接口和规则网络接口
+    // printk(KERN_INFO "interface_type=%s\n", in->name);
+    // printk(KERN_INFO "rule_interface_type=%s\n", rule->interface_type);
     // 检查网络接口
     if (strcmp(rule->interface_type, "$") != 0 && strcmp(rule->interface_type, in->name) != 0)
     {
         return false;
     }
     return true;
+}
+
+// 比较两个时间字符串的大小，字符串格式为"YYYY-MM-DD HH:MM:SS"，返回值为1表示time1大于time2，返回值为0表示time1等于time2，返回值为-1表示time1小于time2
+int istimebig(const char *time1, const char *time2)
+{
+    int year1, month1, day1, hour1, minute1, second1;
+    int year2, month2, day2, hour2, minute2, second2;
+    sscanf(time1, "%d-%d-%d %d:%d:%d", &year1, &month1, &day1, &hour1, &minute1, &second1);
+    sscanf(time2, "%d-%d-%d %d:%d:%d", &year2, &month2, &day2, &hour2, &minute2, &second2);
+    if (year1 > year2)
+    {
+        return 1;
+    }
+    else if (year1 < year2)
+    {
+        return -1;
+    }
+    else
+    {
+        if (month1 > month2)
+        {
+            return 1;
+        }
+        else if (month1 < month2)
+        {
+            return -1;
+        }
+        else
+        {
+            if (day1 > day2)
+            {
+                return 1;
+            }
+            else if (day1 < day2)
+            {
+                return -1;
+            }
+            else
+            {
+                if (hour1 > hour2)
+                {
+                    return 1;
+                }
+                else if (hour1 < hour2)
+                {
+                    return -1;
+                }
+                else
+                {
+                    if (minute1 > minute2)
+                    {
+                        return 1;
+                    }
+                    else if (minute1 < minute2)
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        if (second1 > second2)
+                        {
+                            return 1;
+                        }
+                        else if (second1 < second2)
+                        {
+                            return -1;
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 // 检查时间是否在规则时间范围内，字符串格式为"YYYY-MM-DD HH:MM:SS"
@@ -176,26 +270,37 @@ bool check_time(const char *cur_time, const char *begin_time, const char *end_ti
     // 如果对begin_time无要求
     if (strcmp(begin_time, "$") == 0)
     {
-        if (strcmp(cur_time, end_time) <= 0)
+        if (istimebig(cur_time, end_time) <= 0)
         {
             return true;
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
     // 如果对end_time无要求
     if (strcmp(end_time, "$") == 0)
     {
-        if (strcmp(cur_time, begin_time) >= 0)
+        if (istimebig(cur_time, begin_time) >= 0)
         {
             return true;
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
-
-    if (strcmp(cur_time, begin_time) >= 0 && strcmp(cur_time, end_time) <= 0)
+    // 如果对时间有要求
+    if (istimebig(cur_time, begin_time) >= 0 && istimebig(cur_time, end_time) <= 0)
     {
         return true;
     }
+    else
+    {
+        return false;
+    }
+
     return false;
 }
 
@@ -219,6 +324,9 @@ bool check_rule(const struct sk_buff *skb, const struct Rule *rule)
             return false;
         }
     }
+    // printk(KERN_INFO "protocol_type: %s\n", protocol == IPPROTO_TCP ? "tcp" : protocol == IPPROTO_UDP ? "udp"
+    //                                                                                                  : "icmp");
+    // printk(KERN_INFO "protocol_type: %s\n", rule->src_ip);
 
     // 检查ip
     if (!check_ip(skb, rule))
@@ -244,6 +352,10 @@ bool check_rule(const struct sk_buff *skb, const struct Rule *rule)
     int shiqu = (tm.tm_hour + 8) / 24;
 
     sprintf(cur_time, "%04ld-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday + shiqu, (tm.tm_hour + 8) % 24, tm.tm_min, tm.tm_sec);
+
+    // printk(KERN_INFO "cur_time=%s\n", cur_time);
+    // printk(KERN_INFO "begin_time=%s, end_time=%s\n", rule->begin_time, rule->end_time);
+    // printk(KERN_INFO "check_time=%d\n", istimebig(rule->begin_time, rule->end_time));
 
     if (!check_time(cur_time, rule->begin_time, rule->end_time))
     {
@@ -287,20 +399,28 @@ static void parse_rules(void)
         if (*p == ';')
         {
             *p = '\0';
-            struct Rule rule;
-            rule.id = rules_num;
-            rule.protocol_type = strsep(&q, ",");
-            rule.interface_type = strsep(&q, ",");
-            rule.src_ip = strsep(&q, ",");
-            rule.src_port = strsep(&q, ",");
-            rule.dst_ip = strsep(&q, ",");
-            rule.dst_port = strsep(&q, ",");
-            rule.begin_time = strsep(&q, ",");
-            rule.end_time = strsep(&q, ",");
-
-            rules[rules_num] = rule;
-            rules_num++;
+            char *rule = q;
             q = p + 1;
+            char *protocol_type = strsep(&rule, ",");
+            char *interface_type = strsep(&rule, ",");
+            char *src_ip = strsep(&rule, ",");
+            char *src_port = strsep(&rule, ",");
+            char *dst_ip = strsep(&rule, ",");
+            char *dst_port = strsep(&rule, ",");
+            char *begin_time = strsep(&rule, ",");
+            char *end_time = strsep(&rule, ",");
+            // 保存规则
+            rules[rules_num].id = rules_num;
+            rules[rules_num].protocol_type = kstrdup(protocol_type, GFP_KERNEL);
+            rules[rules_num].interface_type = kstrdup(interface_type, GFP_KERNEL);
+            rules[rules_num].src_ip = kstrdup(src_ip, GFP_KERNEL);
+            rules[rules_num].src_port = kstrdup(src_port, GFP_KERNEL);
+            rules[rules_num].dst_ip = kstrdup(dst_ip, GFP_KERNEL);
+            rules[rules_num].dst_port = kstrdup(dst_port, GFP_KERNEL);
+            rules[rules_num].begin_time = kstrdup(begin_time, GFP_KERNEL);
+            rules[rules_num].end_time = kstrdup(end_time, GFP_KERNEL);
+            rules_num++;
+
             // test
             // printk(KERN_INFO "protocol_type: %s\n", rules[rules_num - 1].protocol_type);
             // printk(KERN_INFO "interface_type: %s\n", rules[rules_num - 1].interface_type);
@@ -310,9 +430,6 @@ static void parse_rules(void)
             // printk(KERN_INFO "dst_port: %s\n", rules[rules_num - 1].dst_port);
             // printk(KERN_INFO "begin_time: %s\n", rules[rules_num - 1].begin_time);
             // printk(KERN_INFO "end_time: %s\n", rules[rules_num - 1].end_time);
-
-            // 测试$是否起到占位符的作用
-            // printk(KERN_INFO "protocol_type: %d\n", strcmp(rules[rules_num - 1].protocol_type, "$"));
         }
         p++;
     }
@@ -355,7 +472,7 @@ static ssize_t write_control(struct file *file, const char __user *buf, size_t c
 static unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_state *state)
 {
     // 打印skb内容中的源ip和目的ip
-    printk(KERN_INFO "src_ip=%pI4, dst_ip=%pI4\n", &ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr);
+    // printk(KERN_INFO "src_ip=%pI4, dst_ip=%pI4\n", &ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr);
 
     if (down_interruptible(&sem))
     {
@@ -364,6 +481,7 @@ static unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_h
     int i;
     for (i = 0; i < rules_num; i++)
     {
+        printk(KERN_INFO "check rule %d\n", i);
         if (check_rule(skb, &rules[i]))
         {
             // 打印日志
