@@ -516,12 +516,12 @@ static unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_h
 }
 
 // 字符设备注册
-struct file_operations fops = {
+static const struct file_operations fops = {
     .owner = THIS_MODULE,
     .read = read_control,
     .write = write_control,
 };
-struct miscdevice misc = {
+static struct miscdevice misc = {
     .minor = MISC_DYNAMIC_MINOR,
     .name = DEV_FILE,
     .fops = &fops,
