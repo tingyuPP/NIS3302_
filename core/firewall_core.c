@@ -49,13 +49,13 @@ struct Rule
 static struct Rule rules[MAX_RULES_NUM]; // 规则数组
 static int rules_num = 0;                // 规则数量
 static char device[MAX_INPUT_STR_LEN];   // 设备缓冲区
-static struct semaphore sem;             // 信号量
-static wait_queue_head_t wq;             // 等待队列
-struct file *filep = NULL;               // 文件指针
-loff_t pos = 0;                          // 文件偏移量
-struct rw_semaphore file_lock;           // 文件锁
-char buf_log[100];                       // 日志缓冲区
-static struct nf_hook_ops *nfho = NULL;  // 网络过滤钩子
+// static struct semaphore sem;             // 信号量
+static DECLARE_WAIT_QUEUE_HEAD(wq); // 等待队列
+struct file *filep = NULL;          // 文件指针
+loff_t pos = 0;                     // 文件偏移量
+// struct rw_semaphore file_lock;           // 文件锁
+char buf_log[256];                      // 日志缓冲区
+static struct nf_hook_ops *nfho = NULL; // 网络过滤钩子
 
 int atoi(char *pstr)
 {
@@ -377,12 +377,12 @@ static int print_log(const char *log)
     }
 
     // 获取文件锁
-    down_write(&file_lock);
+    // down_write(&file_lock);
 
     kernel_write(filep, buf_log, len, &pos);
 
     // 释放文件锁
-    up_write(&file_lock);
+    // up_write(&file_lock);
 
     return 0;
 }
@@ -453,13 +453,13 @@ static ssize_t write_control(struct file *file, const char __user *buf, size_t c
         rules_num = 0;
         memset(rules, 0, sizeof(rules));
         // 解析规则,注意信号量
-        if (down_interruptible(&sem))
-        { // 获取信号量
-            // 进入临界区
-            wait_event_interruptible(wq, 1);
-        }
+        // if (down_interruptible(&sem))
+        // { // 获取信号量
+        //     // 进入临界区
+        //     wait_event_interruptible(wq, (sem.count > 0));
+        // }
         parse_rules();
-        up(&sem); // 释放信号量
+        // up(&sem); // 释放信号量
     }
     // 初始化设备缓冲区
     memset(device, 0, MAX_INPUT_STR_LEN);
@@ -474,44 +474,80 @@ static unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_h
     // 打印skb内容中的源ip和目的ip
     // printk(KERN_INFO "src_ip=%pI4, dst_ip=%pI4\n", &ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr);
 
-    if (down_interruptible(&sem))
-    {
-        wait_event_interruptible(wq, 1);
-    }
+    // if (down_interruptible(&sem))
+    // {
+    //     wait_event_interruptible(wq, (sem.count > 0));
+    // }
     int i;
     for (i = 0; i < rules_num; i++)
     {
         printk(KERN_INFO "check rule %d\n", i);
         if (check_rule(skb, &rules[i]))
         {
+            printk(KERN_INFO "rule %d matched\n", i);
             // 打印日志
-            char log[100];
-            struct iphdr *iph = ip_hdr(skb);
-            struct tcphdr *tcph = tcp_hdr(skb);
-            struct udphdr *udph = udp_hdr(skb);
-            struct icmphdr *icmph = icmp_hdr(skb);
+            char log[200];
+            // struct iphdr *iph = ip_hdr(skb);
+            // struct tcphdr *tcph = tcp_hdr(skb);
+            // struct udphdr *udph = udp_hdr(skb);
+            // struct icmphdr *icmph = icmp_hdr(skb);
+            // char src_ip[16];
+            // char dst_ip[16];
+            // sprintf(src_ip, "%pI4", &iph->saddr);
+            // sprintf(dst_ip, "%pI4", &iph->daddr);
+            // if (tcph != NULL)
+            // {
+            //     sprintf(log, "Blocked TCP packet: src_ip=%s, src_port=%d, dst_ip=%s, dst_port=%d\n", src_ip, ntohs(tcph->source), dst_ip, ntohs(tcph->dest));
+            // }
+            // else if (udph != NULL)
+            // {
+            //     sprintf(log, "Blocked UDP packet: src_ip=%s, src_port=%d, dst_ip=%s, dst_port=%d\n", src_ip, ntohs(udph->source), dst_ip, ntohs(udph->dest));
+            // }
+            // else if (icmph != NULL)
+            // {
+            //     sprintf(log, "Blocked ICMP packet: src_ip=%s, dst_ip=%s\n", src_ip, dst_ip);
+            // }
+            // 输出格式为[时间] 协议类型 源IP:源端口 -> 目的IP:目的端口,时间格式为"YYYY-MM-DD HH:MM:SS"
+            struct timespec64 tv;
+            struct tm tm;
+            char cur_time[20];
+            ktime_get_real_ts64(&tv);
+            time64_to_tm(tv.tv_sec, 0, &tm);
+            int shiqu = (tm.tm_hour + 8) / 24;
+
+            sprintf(cur_time, "%04ld-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday + shiqu, (tm.tm_hour + 8) % 24, tm.tm_min, tm.tm_sec);
+
             char src_ip[16];
             char dst_ip[16];
-            sprintf(src_ip, "%pI4", &iph->saddr);
-            sprintf(dst_ip, "%pI4", &iph->daddr);
-            if (tcph != NULL)
+            sprintf(src_ip, "%pI4", &ip_hdr(skb)->saddr);
+            sprintf(dst_ip, "%pI4", &ip_hdr(skb)->daddr);
+
+            // 获取skb的协议类型
+            char *protocol_type;
+            if (ip_hdr(skb)->protocol == IPPROTO_TCP)
             {
-                sprintf(log, "Blocked TCP packet: src_ip=%s, src_port=%d, dst_ip=%s, dst_port=%d\n", src_ip, ntohs(tcph->source), dst_ip, ntohs(tcph->dest));
+                protocol_type = "TCP";
             }
-            else if (udph != NULL)
+            else if (ip_hdr(skb)->protocol == IPPROTO_UDP)
             {
-                sprintf(log, "Blocked UDP packet: src_ip=%s, src_port=%d, dst_ip=%s, dst_port=%d\n", src_ip, ntohs(udph->source), dst_ip, ntohs(udph->dest));
+                protocol_type = "UDP";
             }
-            else if (icmph != NULL)
+            else if (ip_hdr(skb)->protocol == IPPROTO_ICMP)
             {
-                sprintf(log, "Blocked ICMP packet: src_ip=%s, dst_ip=%s\n", src_ip, dst_ip);
+                protocol_type = "ICMP";
             }
+            else
+            {
+                protocol_type = "UNKNOWN";
+            }
+
+            sprintf(log, "Blocked [%s] %s %s:%d -> %s:%d\n", cur_time, protocol_type, src_ip, atoi(rules[i].src_port), dst_ip, atoi(rules[i].dst_port));
 
             print_log(log);
             return NF_DROP;
         }
     }
-    up(&sem);
+    // up(&sem);
     return NF_ACCEPT;
 }
 
@@ -533,7 +569,7 @@ static int __init firewall_init(void)
 
     printk(KERN_INFO "Firewall module loaded\n");
     // 初始化设备文件
-    struct file *file = filp_open(LOG_FILE, O_RDWR | O_CREAT, 0644);
+    struct file *file = filp_open(LOG_FILE, O_RDWR | O_CREAT | O_APPEND, 0644);
     if (IS_ERR(file))
     {
         pr_err("Failed to open file\n");
@@ -541,7 +577,7 @@ static int __init firewall_init(void)
     }
     filep = file;
     // 初始化文件锁
-    init_rwsem(&file_lock);
+    // init_rwsem(&file_lock);
 
     misc_register(&misc); // 注册设备
 
@@ -555,15 +591,15 @@ static int __init firewall_init(void)
     }
     nfho->hook = hook_func;              // 数据包处理函数
     nfho->hooknum = NF_INET_PRE_ROUTING; // 钩子位置
-    nfho->pf = PF_INET;                  // 协议族
+    nfho->pf = NFPROTO_IPV4;             // 协议族
     nfho->priority = NF_IP_PRI_FIRST;    // 优先级
 
     nf_register_net_hook(&init_net, nfho);
     // 初始化设备缓冲区
     memset(device, 0, MAX_INPUT_STR_LEN);
     // 初始化信号量
-    sema_init(&sem, 1);
-    init_waitqueue_head(&wq);
+    // sema_init(&sem, 1);
+    // init_waitqueue_head(&wq);
     return 0;
 }
 
@@ -587,9 +623,11 @@ static void __exit firewall_exit(void)
         kfree(rules[i].begin_time);
         kfree(rules[i].end_time);
     }
-    // 关闭文件
+
+    // 删除LOG_FILE中的内容
     filp_close(filep, NULL);
-    // 清空规则数组
+
+        // 清空规则数组
     rules_num = 0;
     memset(rules, 0, sizeof(rules));
 }
