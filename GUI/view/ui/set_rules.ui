@@ -6,100 +6,179 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>776</width>
-    <height>592</height>
+    <width>896</width>
+    <height>708</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="PushButton" name="pushButton">
+  <widget class="CardWidget" name="frame">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>60</y>
-     <width>75</width>
-     <height>24</height>
+     <x>30</x>
+     <y>30</y>
+     <width>531</width>
+     <height>81</height>
     </rect>
    </property>
-   <property name="text">
-    <string>PushButton</string>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Shadow::Plain</enum>
+   </property>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>511</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="PushButton" name="pushButton">
+       <property name="text">
+        <string>添加</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="PushButton" name="pushButton_2">
+       <property name="text">
+        <string>删除</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="PushButton" name="pushButton_3">
+       <property name="text">
+        <string>修改</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="PrimaryPushButton" name="pushButton_4">
+       <property name="text">
+        <string>导入</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="PrimaryPushButton" name="pushButton_5">
+       <property name="text">
+        <string>导出</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
-  <widget class="PushButton" name="pushButton_2">
+  <widget class="CardWidget" name="frame_2">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>60</y>
-     <width>75</width>
-     <height>24</height>
+     <x>30</x>
+     <y>130</y>
+     <width>821</width>
+     <height>511</height>
     </rect>
    </property>
-   <property name="text">
-    <string>PushButton</string>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Shadow::Plain</enum>
+   </property>
+   <widget class="TableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>781</width>
+      <height>471</height>
+     </rect>
+    </property>
+    <row/>
+    <column>
+     <property name="text">
+      <string>ID</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>协议类型</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>网络接口</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>源IP地址:端口</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>目标IP地址:端口</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>开始时间</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>结束时间</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>执行动作</string>
+     </property>
+    </column>
+   </widget>
   </widget>
-  <widget class="PushButton" name="pushButton_3">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>60</y>
-     <width>75</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>PushButton</string>
-   </property>
-  </widget>
-  <widget class="PrimaryPushButton" name="pushButton_4">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>60</y>
-     <width>75</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>PushButton</string>
-   </property>
-  </widget>
-  <widget class="PrimaryPushButton" name="pushButton_5">
-   <property name="geometry">
-    <rect>
-     <x>480</x>
-     <y>60</y>
-     <width>75</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>PushButton</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>29</x>
-     <y>39</y>
-     <width>551</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout"/>
-  </widget>
+  <zorder>frame_2</zorder>
+  <zorder>frame</zorder>
  </widget>
  <customwidgets>
   <customwidget>
    <class>PushButton</class>
    <extends>QPushButton</extends>
-   <header>qfluentweights</header>
+   <header>qfluentwidgets</header>
   </customwidget>
   <customwidget>
    <class>PrimaryPushButton</class>
    <extends>QPushButton</extends>
-   <header>qfluentweights</header>
+   <header>qfluentwidgets</header>
+  </customwidget>
+  <customwidget>
+   <class>TableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>qfluentwidgets</header>
+  </customwidget>
+  <customwidget>
+   <class>CardWidget</class>
+   <extends>QFrame</extends>
+   <header>qfluentwidgets</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

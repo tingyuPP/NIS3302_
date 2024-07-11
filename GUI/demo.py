@@ -1,23 +1,73 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.QtCore import Qt
-from resource.Ui_set_rules import Ui_Form
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtGui import QIcon, QDesktopServices
+from PyQt5.QtWidgets import QApplication
+from qfluentwidgets import (
+    NavigationItemPosition,
+    MessageBox,
+    setTheme,
+    Theme,
+    NavigationAvatarWidget,
+    SplitFluentWindow,
+    FluentTranslator,
+)
+from qfluentwidgets import FluentIcon as FIF
+from resource.set_rules import SetRules
+from resource.show_log import ShowLog
 
 
-class Demo(QWidget, Ui_Form):
+class Window(SplitFluentWindow):
+
     def __init__(self):
-        super(Demo, self).__init__()
-        # self.setupUi(self)
+        super().__init__()
 
-        # self.setWindowFlags(Qt.FramelessWindowHint)  # 1
-        # self.setAttribute(Qt.WA_TranslucentBackground)  # 2
+        # create sub interface
 
-        # self.close_btn.clicked.connect(self.close)
+        self.set_rules = SetRules(self)
+        self.show_log = ShowLog(self)
+
+        self.initNavigation()
+        self.initWindow()
+
+    def initNavigation(self):  # add sub interface
+        self.addSubInterface(self.set_rules, FIF.LABEL, "设置规则")
+        self.addSubInterface(self.show_log, FIF.MESSAGE, "显示日志")
+
+        self.navigationInterface.addItem(
+            routeKey="settingInterface",
+            icon=FIF.SETTING,
+            text="设置",
+            position=NavigationItemPosition.BOTTOM,
+        )
+
+        self.navigationInterface.setExpandWidth(280)
+
+    def initWindow(self):
+        self.resize(950, 700)
+        self.setWindowIcon(QIcon("./view/images/logo.png"))
+        self.setWindowTitle("Firewall Management System")
+
+        desktop = QApplication.desktop().availableGeometry()
+        w, h = desktop.width(), desktop.height()
+        self.move(w // 2 - self.width() // 2, h // 2 - self.height() // 2)
 
 
 if __name__ == "__main__":
+    QApplication.setHighDpiScaleFactorRoundingPolicy(
+        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+    )
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
+
+    # setTheme(Theme.DARK)
+
     app = QApplication(sys.argv)
-    demo = Demo()
-    demo.show()
-    sys.exit(app.exec_())
+
+    # install translator
+    translator = FluentTranslator()
+    app.installTranslator(translator)
+
+    w = Window()
+    w.show()
+    app.exec_()

@@ -42,10 +42,11 @@ sudo ./firewall_cli [-操作] <参数>
 - `-h`：显示使用帮助。
 
 ### 图形化界面使用
+图形界面基于[pyqt5](https://pypi.org/project/PyQt5/)构建，采用[pyqt-fluent-widgets]([QFluentWidgets - Rapidly build modern GUI without ever writing any style sheet](https://qfluentwidgets.com/zh))组件架构，若采用源码运行，须建立python虚拟环境。
+
 todo
 
 ### 编译方法
 
 todo
-
 
