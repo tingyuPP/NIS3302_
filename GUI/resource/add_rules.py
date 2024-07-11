@@ -1,12 +1,10 @@
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QWidget, QGraphicsDropShadowEffect
 
+from resource.Ui_add_rules import Ui_Addrules
 
-from resource.Ui_show_log import Ui_showlog
 
-
-class ShowLog(Ui_showlog, QWidget):
-
+class addrules(Ui_Addrules, QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
