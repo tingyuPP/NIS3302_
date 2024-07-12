@@ -1,0 +1,21 @@
+{
+    "Material": {
+        "AcrylicBlurRadius": 15
+    },
+    "Update": {
+        "CheckUpdateAtStartUp": true
+    },
+    "Folders": {
+        "Download": "C:/Users/HP/Desktop/test/demo/examples/firewall/app/download",
+        "LocalMusic": []
+    },
+    "MainWindow": {
+        "DpiScale": 1,
+        "Language": "zh_HK",
+        "MicaEnabled": false
+    },
+    "QFluentWidgets": {
+        "ThemeColor": "#ff009faa",
+        "ThemeMode": "Light"
+    }
+}

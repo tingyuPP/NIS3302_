@@ -86,11 +86,11 @@ class Ui_setRules(object):
         self.frame_2.raise_()
         self.frame.raise_()
 
-        self.switchButton = SwitchButton(parent=self)
-        self.switchButton.move(700, 70)
-        self.switchButton.setOnText("Dark")
-        self.switchButton.setOffText("Light")
-        self.switchButton.resize(200, 60)
+        # self.switchButton = SwitchButton(parent=self)
+        # self.switchButton.move(700, 70)
+        # self.switchButton.setOnText("Dark")
+        # self.switchButton.setOffText("Light")
+        # self.switchButton.resize(200, 60)
 
         self.retranslateUi(setRules)
         QtCore.QMetaObject.connectSlotsByName(setRules)

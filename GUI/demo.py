@@ -15,6 +15,7 @@ from PyQt5.QtCore import QTimer, QSize, QEventLoop
 from qfluentwidgets import FluentIcon as FIF
 from UIcode.set_rules import SetRules
 from UIcode.show_log import ShowLog
+from UIcode.setting_interface import SettingInterface
 
 
 class Window(SplitFluentWindow):
@@ -34,11 +35,12 @@ class Window(SplitFluentWindow):
         self.addSubInterface(self.set_rules, FIF.LABEL, "设置规则")
         self.addSubInterface(self.show_log, FIF.MESSAGE, "显示日志")
 
-        self.navigationInterface.addItem(
-            routeKey="settingInterface",
-            icon=FIF.SETTING,
-            text="设置",
-            position=NavigationItemPosition.BOTTOM,
+        self.settingInterface = SettingInterface(self)
+        self.addSubInterface(
+            self.settingInterface,
+            FIF.SETTING,
+            self.tr(""),
+            NavigationItemPosition.BOTTOM,
         )
 
         self.navigationInterface.setExpandWidth(280)
@@ -68,7 +70,7 @@ class Window(SplitFluentWindow):
 
     def createSubInterface(self):
         loop = QEventLoop(self)
-        QTimer.singleShot(2000, loop.quit)
+        QTimer.singleShot(1000, loop.quit)
         loop.exec()
 
 
