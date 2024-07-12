@@ -2,7 +2,7 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QWidget, QGraphicsDropShadowEffect
 
 
-from resource.Ui_show_log import Ui_showlog
+from UIcode.Ui_show_log import Ui_showlog
 
 
 class ShowLog(Ui_showlog, QWidget):

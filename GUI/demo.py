@@ -13,8 +13,8 @@ from qfluentwidgets import SplashScreen
 from PyQt5.QtCore import QTimer, QSize, QEventLoop
 
 from qfluentwidgets import FluentIcon as FIF
-from resource.set_rules import SetRules
-from resource.show_log import ShowLog
+from UIcode.set_rules import SetRules
+from UIcode.show_log import ShowLog
 
 
 class Window(SplitFluentWindow):
