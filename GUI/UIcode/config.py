@@ -46,12 +46,6 @@ def isWin11():
 class Config(QConfig):
     """Config of application"""
 
-    # folders
-    musicFolders = ConfigItem("Folders", "LocalMusic", [], FolderListValidator())
-    downloadFolder = ConfigItem(
-        "Folders", "Download", "app/download", FolderValidator()
-    )
-
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())
     dpiScale = OptionsConfigItem(

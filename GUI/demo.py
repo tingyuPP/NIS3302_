@@ -16,6 +16,7 @@ from qfluentwidgets import FluentIcon as FIF
 from UIcode.set_rules import SetRules
 from UIcode.show_log import ShowLog
 from UIcode.setting_interface import SettingInterface
+import UIcode.resource_rc
 
 
 class Window(SplitFluentWindow):

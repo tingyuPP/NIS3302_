@@ -23,7 +23,6 @@ from PyQt5.QtCore import Qt, pyqtSignal, QUrl, QStandardPaths
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog
 from UIcode.config import cfg, HELP_URL, AUTHOR, VERSION, YEAR
-from UIcode.style_sheet import StyleSheet
 
 
 class SettingInterface(ScrollArea):
@@ -39,14 +38,14 @@ class SettingInterface(ScrollArea):
 
         # personalization
         self.personalGroup = SettingCardGroup(self.tr("个性化"), self.scrollWidget)
-        self.themeCard = OptionsSettingCard(
-            cfg.themeMode,
-            FIF.BRUSH,
-            self.tr("应用主题"),
-            self.tr("Change the appearance of your application"),
-            texts=[self.tr("Light"), self.tr("Dark"), self.tr("使用系统设置")],
-            parent=self.personalGroup,
-        )
+        # self.themeCard = OptionsSettingCard(
+        #     cfg.themeMode,
+        #     FIF.BRUSH,
+        #     self.tr("应用主题"),
+        #     self.tr("Change the appearance of your application"),
+        #     texts=[self.tr("Light"), self.tr("Dark"), self.tr("使用系统设置")],
+        #     parent=self.personalGroup,
+        # )
         self.themeColorCard = CustomColorSettingCard(
             cfg.themeColor,
             FIF.PALETTE,
@@ -107,7 +106,7 @@ class SettingInterface(ScrollArea):
         # initialize style sheet
         self.scrollWidget.setObjectName("scrollWidget")
         # self.settingLabel.setObjectName("settingLabel")
-        StyleSheet.SETTING_INTERFACE.apply(self)  # 设置样式
+        # StyleSheet.SETTING_INTERFACE.apply(self)  # 设置样式
 
         # initialize layout
         self.__initLayout()
@@ -118,7 +117,7 @@ class SettingInterface(ScrollArea):
 
         # add cards to group
 
-        self.personalGroup.addSettingCard(self.themeCard)
+        # self.personalGroup.addSettingCard(self.themeCard)
         self.personalGroup.addSettingCard(self.themeColorCard)
         self.personalGroup.addSettingCard(self.zoomCard)
 
@@ -148,5 +147,5 @@ class SettingInterface(ScrollArea):
         cfg.appRestartSig.connect(self.__showRestartTooltip)
 
         # personalization
-        self.themeCard.optionChanged.connect(lambda ci: setTheme(cfg.get(ci)))
+        # self.themeCard.optionChanged.connect(lambda ci: setTheme(cfg.get(ci)))
         self.themeColorCard.colorChanged.connect(lambda c: setThemeColor(c))
