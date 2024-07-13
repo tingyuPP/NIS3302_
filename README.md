@@ -42,15 +42,11 @@ sudo ./firewall_cli [-操作] <参数>
 - `-h`：显示使用帮助。
 
 ### **图形化界面使用**
-图形界面基于[pyqt5](https://pypi.org/project/PyQt5/)构建，采用[pyqt-fluent-widgets](https://qfluentwidgets.com/zh)组件架构，若采用源码运行，须建立python虚拟环境。
+图形界面基于[pyqt5](https://pypi.org/project/PyQt5/)构建，采用[pyqt-fluent-widgets](https://qfluentwidgets.com/zh)组件架构，若采用源码运行，须建立python虚拟环境:
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-**注意**：图形界面使用需带sudo以root权限运行，有可能会出现找不到包的问题。解决方案请参考 [解决方案](https://blog.csdn.net/weixin_39589455/article/details/136092916)
-=======
 python虚拟环境采用`venv`创建，该模块为python3.3以上自带工具，故不需额外安装。
-=======
-python虚拟环境采用`venv`创建，该模块为python3.3以上自带工具，故不需额外安装。
+
+**注意**：图形界面需要加上sudo在root权限下运行，用户在使用时可能会出现找不到包的报错。请参考[解决方案](https://blog.csdn.net/weixin_39589455/article/details/136092916)
 
 在Ubuntu命令行中运行
 
@@ -82,69 +78,12 @@ pip install PyQt-Fluent-Widgets -i https://pypi.org/simple/
 cd .. && cd GUI
 ```
 
-运行`demo.py`即可
-
-```shell
-python demo.py
-```
-
-**以下为部分运行图片展示**
-
-**启动界面**
-
-![image-20240713162303221](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713162303221.png)
-
-**规则编辑界面**
-
-![image-20240713161310946](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713161310946.png)
-
-**日志查看界面**
-
-![image-20240713161357476](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713161357476.png)
-
-**设置界面**
-
-![image-20240713161538585](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713161538585.png)
-
-**添加规则**
-
-![image-20240713161909286](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713161909286.png)
->>>>>>> c9c5b236a68b6988594bee73df3ce7c8d1c2590f
-
-在Ubuntu命令行中运行
-
-```shell
-python -m venv demo 	#demo为虚拟环境名称，可修改
-```
-
-随后运行下面的命令以激活虚拟环境
-
-```shell
-source demo/bin/activate 	#注意修改为你的虚拟环境名称哦
-```
-
-此时命令行应显示为
-
-```shell
-(demo) xxx@xxx-virtual-machine:~/Desktop/demo/bin$ 
-```
-
-随后安装[pyqt-fluent-widgets](https://qfluentwidgets.com/zh)组件库
-
-```shell
-pip install PyQt-Fluent-Widgets -i https://pypi.org/simple/
-```
-
-然后将GUI文件拷贝至该虚拟环境中（即demo文件夹中），并进入GUI文件夹
-
-```shell
-cd .. && cd GUI
-```
+将命令行模式的可执行文件放在和`demo.py`同目录下。
 
 运行`demo.py`即可
 
 ```shell
-python demo.py
+sudo python demo.py
 ```
 
 **以下为部分运行图片展示**
@@ -169,7 +108,6 @@ python demo.py
 
 ![image-20240713161909286](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713161909286.png)
 
->>>>>>> 594510957f2074eeee4516c932ed18affa55b51b
 ### 编译方法
 
 todo
