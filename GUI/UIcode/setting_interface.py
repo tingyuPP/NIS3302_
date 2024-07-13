@@ -22,7 +22,7 @@ from qfluentwidgets import InfoBar
 from PyQt5.QtCore import Qt, pyqtSignal, QUrl, QStandardPaths
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog
-from UIcode.config import cfg, HELP_URL, AUTHOR, VERSION, YEAR
+from UIcode.config import cfg, HELP_URL, AUTHOR, VERSION, YEAR,BLOG_URL
 
 
 class SettingInterface(ScrollArea):
@@ -80,7 +80,7 @@ class SettingInterface(ScrollArea):
             self.aboutGroup,
         )
         self.aboutCard = HyperlinkCard(
-            HELP_URL,
+            BLOG_URL,
             self.tr("GitHub主页"),
             FIF.GITHUB,
             self.tr("关于"),
