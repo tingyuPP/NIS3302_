@@ -1,3 +1,7 @@
+
+
+**其他语言版本: [English](README_en.md), [中文](README.md).**
+
 # NIS3302 - 基于内核模块的包防火墙
 
 ## 使用说明
@@ -41,7 +45,7 @@ sudo ./firewall_cli [-操作] <参数>
 - `-w`：将当前规则写入设备文件。
 - `-h`：显示使用帮助。
 
-### **图形化界面使用**
+## **图形化界面使用**
 图形界面基于[pyqt5](https://pypi.org/project/PyQt5/)构建，采用[pyqt-fluent-widgets](https://qfluentwidgets.com/zh)组件架构，若采用源码运行，须建立python虚拟环境:
 
 python虚拟环境采用`venv`创建，该模块为python3.3以上自带工具，故不需额外安装。
