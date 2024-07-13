@@ -9,6 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import os
+import subprocess
+import re
 
 
 class Ui_DelRule(object):
@@ -55,6 +58,16 @@ class Ui_DelRule(object):
         self.label.setText(_translate("DelRule", "请输入要删除规则的ID号："))
         self.pushButton_6.setText(_translate("DelRule", "取消"))
         self.pushButton_7.setText(_translate("DelRule", "确定"))
+    
+    def on_pushButton_7_clicked(self):
+        rule_id = self.lineEdit.text()
+        command = ['sudo', './firewall_cli', '-d', rule_id]
+        result = subprocess.run(command, capture_output=True, text = True, cwd = os.getcwd())
+        clean_output = re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', result.stdout)
+        QtWidgets.QMessageBox.information(self, '结果', clean_output)
+    
+    def on_pushButton_6_clicked(self):
+        self.close()
 
 
 from qfluentwidgets import LineEdit, PrimaryPushButton, PushButton, StrongBodyLabel
