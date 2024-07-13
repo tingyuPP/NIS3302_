@@ -44,8 +44,7 @@ sudo ./firewall_cli [-操作] <参数>
 ### 图形化界面使用
 图形界面基于[pyqt5](https://pypi.org/project/PyQt5/)构建，采用[pyqt-fluent-widgets](https://qfluentwidgets.com/zh)组件架构，若采用源码运行，须建立python虚拟环境。
 
-todo
-
+**注意**：图形界面使用需带sudo以root权限运行，有可能会出现找不到包的问题。解决方案请参考 [解决方案](https://blog.csdn.net/weixin_39589455/article/details/136092916)
 ### 编译方法
 
 todo
