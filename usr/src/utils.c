@@ -189,7 +189,7 @@ bool isRuleEmpty(const Rule *rule) {
 
 bool isValidProtocolType(const char* protocolType) {
     const char* valid_protocols[] = {"tcp", "udp", "icmp", "$"};
-    for (int i = 0; valid_protocols[i] != NULL; i++) {
+    for (int i = 0; i < 4; i++) {
         if (strcmp(protocolType, valid_protocols[i]) == 0) {
             return true;
         }
@@ -203,7 +203,7 @@ bool isValidInterfaceType(const char *interfaceType) {
         return true;  
     }
     const char *valid_interfaces[] = {"eth0", "eth1", "wlan0","ens33", "$"};
-    for (int i = 0; valid_interfaces[i]; i++) {
+    for (int i = 0; i < 5; i++) {
         if (strcmp(interfaceType, valid_interfaces[i]) == 0) {
             return true;
         }
