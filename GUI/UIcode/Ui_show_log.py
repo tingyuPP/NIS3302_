@@ -19,9 +19,9 @@ class Ui_showlog(object):
         self.listWidget.setGeometry(QtCore.QRect(60, 60, 781, 581))
         self.listWidget.setObjectName("listWidget")
         item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
+
         item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
+
         self.frame = CardWidget(showlog)
         self.frame.setGeometry(QtCore.QRect(40, 40, 821, 621))
         sizePolicy = QtWidgets.QSizePolicy(
@@ -45,27 +45,7 @@ class Ui_showlog(object):
         showlog.setWindowTitle(_translate("showlog", "Form"))
         __sortingEnabled = self.listWidget.isSortingEnabled()
         self.listWidget.setSortingEnabled(False)
-        item = self.listWidget.item(0)
-        item.setText(
-            _translate(
-                "showlog",
-                "Blocked [2024-07-10 16:16:25] $ 202.120.2.119:0 -> 192.168.146.145:0",
-            )
-        )
-        item = self.listWidget.item(1)
-        item.setText(
-            _translate(
-                "showlog",
-                "Blocked [2024-07-10 16:25:04] ICMP 202.120.35.189:0 -> 192.168.146.145:0",
-            )
-        )
-        # 改变字体
-        font = QtGui.QFont()
-        font.setFamily("Comic Sans MS")
-        font.setPointSize(12)
 
-        for i in range(self.listWidget.count()):
-            self.listWidget.item(i).setFont(font)
 
         self.listWidget.setSortingEnabled(__sortingEnabled)
 
