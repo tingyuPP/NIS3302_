@@ -225,6 +225,14 @@ void handleRead(int argc, char *argv[])
     }
     const char *filename = argv[2];
     readRulesFromFile(filename);
+    if (writeRulesToDevice())
+    {
+        printf("\033[1;32m规则写入设备成功！\033[0m\n");
+    }
+    else
+    {
+        printf("\033[1;31m规则写入设备失败！\033[0m\n");
+    }
     //printf("从文件读取规则成功\n");
 }
 
