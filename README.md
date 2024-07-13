@@ -86,7 +86,7 @@ python demo.py
 
 **启动界面**
 
-![image-20240713161213733](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713161213733.png)
+![image-20240713162303221](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713162303221.png)
 
 **规则编辑界面**
 
