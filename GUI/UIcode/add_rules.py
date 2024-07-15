@@ -7,7 +7,7 @@ import subprocess
 import os
 import re
 
-class AddRules(Ui_AddRule, QWidget):
+class addrules(Ui_AddRule, QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
@@ -24,13 +24,14 @@ class AddRules(Ui_AddRule, QWidget):
 
     def on_pushButton_7_clicked(self):
         ptc = self.pushButton.currentText()
+        ptc = ptc.lower()
         itf = self.lineEdit_2.text()
         sip = f"{self.spinBox.value()}.{self.spinBox_2.value()}.{self.spinBox_3.value()}.{self.spinBox_4.value()}"
         spt = self.spinBox_5.value()
         dip = f"{self.spinBox_6.value()}.{self.spinBox_10.value()}.{self.spinBox_7.value()}.{self.spinBox_8.value()}"
         dpt = self.spinBox_9.value()
-        btm = self.pushButton_2.date().toString("yyyy-MM-dd") + " " + self.pushButton_3.time().toString("HH:mm:ss")
-        etm = self.pushButton_4.date().toString("yyyy-MM-dd") + " " + self.pushButton_5.time().toString("HH:mm:ss")
+        btm = self.pushButton_2.getDate().toString("yyyy-MM-dd") + " " + self.pushButton_3.getTime().toString("HH:mm:ss")
+        etm = self.pushButton_4.getDate().toString("yyyy-MM-dd") + " " + self.pushButton_5.getTime().toString("HH:mm:ss")
         act = "DROP" if self.checkBox.isChecked() else "ACCEPT"
 
         command = ['sudo', './firewall_cli', '-a', ptc, itf, sip, str(spt), dip, str(dpt), btm, etm, act]
