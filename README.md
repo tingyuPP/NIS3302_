@@ -45,6 +45,8 @@ sudo ./firewall_cli [-操作] <参数>
 
 ## **图形化界面使用**
 
+可以直接下载`GUI/dist`文件夹，运行其中的`demo`文件即可。若采用源码运行见下。
+
 图形界面基于[pyqt5](https://pypi.org/project/PyQt5/)构建，采用[pyqt-fluent-widgets](https://qfluentwidgets.com/zh)组件架构，若采用源码运行，须建立 python 虚拟环境:
 
 python 虚拟环境采用`venv`创建，该模块为 python3.3 以上自带工具，故不需额外安装。
@@ -111,6 +113,3 @@ sudo /home/xxx/Desktop/demo/bin/python demo.py
 
 ![image-20240713161909286](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713161909286.png)
 
-### 编译方法
-
-todo

@@ -45,6 +45,8 @@ sudo ./firewall_cli [-operation] <parameter>
 
 ## Graphical interface
 
+Download `GUI/dist`，run the file `demo` to start Graphical interface.
+
 Graphical interface based on [pyqt5](https://pypi.org/project/PyQt5/), the [pyqt - fluent - widgets](https://qfluentwidgets.com/zh), the component architecture, if use the source code to run, To create a python virtual environment:
 
 The python virtual environment is created using venv, which is a built-in tool of Python 3.3 and above, so no additional installation is required.
@@ -111,6 +113,3 @@ sudo /home/XXX/Desktop/demo/bin/python demo.py
 
 ![image-20240713161909286](https://cdn.jsdelivr.net/gh/zlh123123/MyPictures/image-20240713161909286.png)
 
-## methods of compiling
-
-todo
