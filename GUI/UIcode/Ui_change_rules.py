@@ -89,35 +89,7 @@ class Ui_ChangeRule(object):
         self.label_2.setText(_translate("ChangeRule", "修改参数"))
         self.label_3.setText(_translate("ChangeRule", "修改后的值"))
 
-    def on_pushButton_6_clicked(self):
-        self.close()
 
-    def on_pushButton_7_clicked(self):
-        rule_id = self.lineEdit.text()
-        selectedText = self.pushButton.currentText()
-        if selectedText == '协议类型':
-            parameter = 'ptc'
-        elif selectedText == '网络接口':
-            parameter = 'itf'
-        elif selectedText == '源IP':
-            parameter = 'sip'
-        elif selectedText == '源端口':
-            parameter = 'spt'
-        elif selectedText == '目的IP':
-            parameter = 'dip'
-        elif selectedText == '目的端口':
-            parameter = 'dpt'
-        elif selectedText == '开始时间':
-            parameter = 'btm'
-        elif selectedText == '结束时间':
-            parameter = 'etm'
-        elif selectedText == '规则状态':
-            parameter = 'act'
-        value = self.lineEdit_2.text()
-        command = ['sudo', './firewall_cli', '-m', rule_id, parameter, value]
-        result = subprocess.run(command, capture_output=True, text = True, cwd = os.getcwd())
-        clean_output = re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', result.stdout)
-        QtWidgets.QMessageBox.information(self, '结果', clean_output)
 
 
 from qfluentwidgets import (

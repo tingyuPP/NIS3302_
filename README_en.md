@@ -26,7 +26,7 @@ remove module:
 sudo rmmod firewall_core
 ```
 
-## The command line mode 
+## The command line mode
 
 command format：
 
@@ -44,6 +44,7 @@ sudo ./firewall_cli [-operation] <parameter>
 - `-h`：Show use help.
 
 ## Graphical interface
+
 Graphical interface based on [pyqt5](https://pypi.org/project/PyQt5/), the [pyqt - fluent - widgets](https://qfluentwidgets.com/zh), the component architecture, if use the source code to run, To create a python virtual environment:
 
 The python virtual environment is created using venv, which is a built-in tool of Python 3.3 and above, so no additional installation is required.
@@ -65,7 +66,7 @@ source demo/bin/activate 	#Be sure to change it to your virtual environment name
 In this case, the command line should display as:
 
 ```shell
-(demo) xxx@xxx-virtual-machine:~/Desktop/demo/bin$ 
+(demo) xxx@xxx-virtual-machine:~/Desktop/demo/bin$
 ```
 
 Then install [pyqt-fluent-widgets](https://qfluentwidgets.com/zh):
@@ -80,12 +81,12 @@ Then copy the GUI file to the virtual environment (that is, the demo folder) and
 cd .. && cd GUI
 ```
 
-Put the command-line executable in the same directory as`demo.py`.
+At this time, run the command in the virtual environment terminal `which python`, accessible python program, the absolute path `/home/XXX/Desktop/demo/bin/python`, finally running `demo.py` .
 
 Run `demo.py`:
 
 ```shell
-sudo python demo.py
+sudo /home/XXX/Desktop/demo/bin/python demo.py
 ```
 
 **Below are some running pictures**

@@ -319,6 +319,7 @@ bool check_rule(const struct sk_buff *skb, const struct Rule *rule)
         {
             return false;
         }
+
         if (strcmp(rule->protocol_type, "icmp") == 0 && protocol != IPPROTO_ICMP)
         {
             return false;
@@ -478,14 +479,16 @@ static unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_h
     // {
     //     wait_event_interruptible(wq, (sem.count > 0));
     // }
+    // 打印数据包的协议类型
+    // printk(KERN_INFO "protocol_type: %d\n", ip_hdr(skb)->protocol);
     int i;
     for (i = 0; i < rules_num; i++)
     {
-        printk(KERN_INFO "check rule %d\n", i);
+        // printk(KERN_INFO "check rule %d\n", i);
         if (check_rule(skb, &rules[i]))
         {
-            printk(KERN_INFO "rule %d matched\n", i);
-            // 打印日志
+            // printk(KERN_INFO "rule %d matched\n", i);
+            //  打印日志
             char log[200];
             // struct iphdr *iph = ip_hdr(skb);
             // struct tcphdr *tcph = tcp_hdr(skb);
@@ -540,8 +543,29 @@ static unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_h
             {
                 protocol_type = "UNKNOWN";
             }
+            // 获取源端口和目的端口
+            struct tcphdr *tcph = tcp_hdr(skb);
+            struct udphdr *udph = udp_hdr(skb);
+            char src_port[6];
+            char dst_port[6];
 
-            sprintf(log, "Blocked [%s] %s %s:%d -> %s:%d\n", cur_time, protocol_type, src_ip, atoi(rules[i].src_port), dst_ip, atoi(rules[i].dst_port));
+            if (tcph != NULL)
+            {
+                sprintf(src_port, "%d", ntohs(tcph->source));
+                sprintf(dst_port, "%d", ntohs(tcph->dest));
+            }
+            else if (udph != NULL)
+            {
+                sprintf(src_port, "%d", ntohs(udph->source));
+                sprintf(dst_port, "%d", ntohs(udph->dest));
+            }
+            else
+            {
+                sprintf(src_port, "0");
+                sprintf(dst_port, "0");
+            }
+
+            sprintf(log, "[%s] %s %s:%s -> %s:%s\n", cur_time, protocol_type, src_ip, src_port, dst_ip, dst_port);
 
             print_log(log);
             return NF_DROP;
@@ -627,7 +651,7 @@ static void __exit firewall_exit(void)
     // 删除LOG_FILE中的内容
     filp_close(filep, NULL);
 
-        // 清空规则数组
+    // 清空规则数组
     rules_num = 0;
     memset(rules, 0, sizeof(rules));
 }

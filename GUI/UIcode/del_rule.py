@@ -1,11 +1,12 @@
 
 from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QWidget, QGraphicsDropShadowEffect, QApplication, QMessageBox
-
+from PyQt5.QtCore import pyqtSlot
 from UIcode.Ui_del_rules import Ui_DelRule
 import subprocess
 import os
 import re
+
 
 
 class DelRules(Ui_DelRule, QWidget):
@@ -20,12 +21,19 @@ class DelRules(Ui_DelRule, QWidget):
         w, h = desktop.width(), desktop.height()  # 获取屏幕宽高
         self.move(w // 2 - self.width() // 2, h // 2 - self.height() // 2)  # 居中显示
     
+
+    @pyqtSlot()
     def on_pushButton_7_clicked(self):
         rule_id = self.lineEdit.text()
         command = ['sudo', './firewall_cli', '-d', rule_id]
         result = subprocess.run(command, capture_output=True, text = True, cwd = os.getcwd())
         clean_output = re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', result.stdout)
         QMessageBox.information(self, '结果', clean_output)
+
+
+
+        
+
     
     def on_pushButton_6_clicked(self):
         self.close()

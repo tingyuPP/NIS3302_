@@ -1,1 +1,1 @@
-savedcmd_/home/tyu/NIS3302_/core/modules.order := {   echo /home/tyu/NIS3302_/core/firewall_core.o; :; } > /home/tyu/NIS3302_/core/modules.order
+savedcmd_/home/zlh/Desktop/demo/NIS3302_/core/modules.order := {   echo /home/zlh/Desktop/demo/NIS3302_/core/firewall_core.o; :; } > /home/zlh/Desktop/demo/NIS3302_/core/modules.order

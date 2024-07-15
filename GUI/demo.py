@@ -17,12 +17,29 @@ from UIcode.set_rules import SetRules
 from UIcode.show_log import ShowLog
 from UIcode.setting_interface import SettingInterface
 import UIcode.resource_rc
+import subprocess
+import os
 
 
 class Window(SplitFluentWindow):
 
     def __init__(self):
         super().__init__()
+
+        #运行命令sudo insmod ./firewall_core.ko
+        command = ['sudo', 'insmod', 'firewall_core.ko']
+        subprocess.run(command, capture_output=True, text = True, cwd = os.getcwd())
+
+        #运行命令sudo ./firewall_cli -w
+        command = ['sudo', './firewall_cli', '-w']
+        subprocess.run(command, capture_output=True, text = True, cwd = os.getcwd())
+
+
+
+
+
+
+
 
         # create sub interface
 
@@ -50,6 +67,8 @@ class Window(SplitFluentWindow):
         self.resize(950, 700)
         self.setWindowIcon(QIcon("./view/images/logo.png"))
         self.setWindowTitle("Firewall Management System")
+        #固定窗口大小
+        self.setFixedSize(950, 700)
 
         # 1. 创建启动页面
         icon = QIcon("./view/images/start.png")
@@ -93,3 +112,11 @@ if __name__ == "__main__":
     w = Window()
     w.show()
     app.exec_()
+    #运行命令sudo rmmod firewall_core
+    command = ['sudo', 'rmmod', 'firewall_core']
+    subprocess.run(command, capture_output=True, text = True, cwd = os.getcwd())
+    #清空文件/var/log/firewall.log
+    command = ['sudo', 'rm','-f', '/var/log/firewall.log']
+    subprocess.run(command, capture_output=True, text = True, cwd = os.getcwd())
+
+

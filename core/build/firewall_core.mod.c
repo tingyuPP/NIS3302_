@@ -35,7 +35,6 @@ MODULE_INFO(retpoline, "Y");
 
 static const struct modversion_info ____versions[]
 __used __section("__versions") = {
-	{ 0x2d39b0a7, "kstrdup" },
 	{ 0x87a21cb3, "__ubsan_handle_out_of_bounds" },
 	{ 0xf0fdf6cb, "__stack_chk_fail" },
 	{ 0x619cb7dd, "simple_read_from_buffer" },
@@ -50,23 +49,24 @@ __used __section("__versions") = {
 	{ 0xb88db70c, "kmalloc_caches" },
 	{ 0x4454730e, "kmalloc_trace" },
 	{ 0xb1b2127c, "nf_register_net_hook" },
-	{ 0x11089ac7, "_ctype" },
-	{ 0x3c3ff9fd, "sprintf" },
-	{ 0xe2d5255a, "strcmp" },
-	{ 0xbcab6ee6, "sscanf" },
 	{ 0x9ec6ca96, "ktime_get_real_ts64" },
 	{ 0xfff5afc, "time64_to_tm" },
+	{ 0x3c3ff9fd, "sprintf" },
 	{ 0x656e4a6e, "snprintf" },
 	{ 0x2a968edb, "kernel_write" },
+	{ 0x11089ac7, "_ctype" },
+	{ 0xe2d5255a, "strcmp" },
+	{ 0xbcab6ee6, "sscanf" },
 	{ 0xbdfb6dbb, "__fentry__" },
 	{ 0xbb4f4766, "simple_write_to_buffer" },
 	{ 0xfb578fc5, "memset" },
 	{ 0x5b8239ca, "__x86_return_thunk" },
 	{ 0x85df9b6c, "strsep" },
+	{ 0x2d39b0a7, "kstrdup" },
 	{ 0x2fa5cadd, "module_layout" },
 };
 
 MODULE_INFO(depends, "");
 
 
-MODULE_INFO(srcversion, "98E8575A6DA94F16833213B");
+MODULE_INFO(srcversion, "89E20F6325A2AD6818407F6");

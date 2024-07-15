@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QWidget, QGraphicsDropShadowEffect, QApplication, QMessageBox
-
+from PyQt5.QtCore import pyqtSlot
 from UIcode.Ui_change_rules import Ui_ChangeRule
 
 import os
@@ -21,7 +21,8 @@ class ChangeRules(Ui_ChangeRule, QWidget):
     
     def on_pushButton_6_clicked(self):
         self.close()
-
+    
+    @pyqtSlot()
     def on_pushButton_7_clicked(self):
         rule_id = self.lineEdit.text()
         selectedText = self.pushButton.currentText()
